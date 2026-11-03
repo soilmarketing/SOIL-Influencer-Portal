@@ -1,0 +1,985 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SOIL Influencer Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #a6ce3d;
+    --green-tint: #eef5d8;
+    --green-deep: #556f14;
+    --orange: #ea7427;
+    --orange-deep: #b4500f;
+    --orange-tint: #fbe6d6;
+    --tan: #c9b189;
+    --tan-tint: #efe6d6;
+    --cream: #f6eee2;
+    --paper: #fffdf9;
+    --ink: #2a2820;
+    --muted: #6b6553;
+    --line: #e4d8c3;
+    --red: #a8321f;
+    --red-tint: #f8e1dc;
+    --radius-s: 6px;
+    --radius-m: 10px;
+    font-family: "Poppins", "Segoe UI", system-ui, -apple-system, sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-size: 15px; line-height: 1.55; }
+  h1, h2, h3, h4 { margin: 0; line-height: 1.25; }
+  h2 { font-size: 1.6rem; font-weight: 600; }
+  h3 { font-size: 1.1rem; font-weight: 600; }
+  h4 { font-size: 0.95rem; font-weight: 600; }
+  p { margin: 0; }
+  [hidden] { display: none !important; }
+  a { color: var(--green-deep); }
+  :focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
+
+  /* Buttons and fields */
+  button, input, select, textarea { font: inherit; color: inherit; }
+  .btn {
+    border: 1px solid transparent; border-radius: var(--radius-s); padding: 9px 16px;
+    font-weight: 500; cursor: pointer; background: var(--tan-tint); color: var(--ink);
+  }
+  .btn:hover { background: var(--line); }
+  .btn.primary { background: var(--orange-deep); color: #fff; }
+  .btn.primary:hover { background: #9c440b; }
+  .btn.danger { background: transparent; border-color: var(--red); color: var(--red); }
+  .btn.danger:hover { background: var(--red-tint); }
+  .btn.quiet { background: transparent; border-color: var(--line); }
+  .btn.small { padding: 5px 10px; font-size: 0.85rem; }
+  .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+  label.field { display: grid; gap: 6px; font-weight: 500; font-size: 0.92rem; }
+  .hint { color: var(--muted); font-size: 0.85rem; font-weight: 400; }
+  input[type=text], input[type=email], input[type=password], input[type=search], select, textarea {
+    width: 100%; border: 1px solid var(--line); border-radius: var(--radius-s);
+    padding: 9px 11px; background: #fff;
+  }
+  textarea { resize: vertical; }
+
+  /* Login */
+  .login { min-height: 100vh; display: grid; place-items: center; background: var(--cream); padding: 24px; }
+  .login-card { width: min(400px, 100%); background: var(--paper); border-radius: var(--radius-m); padding: 32px; display: grid; gap: 18px; border-top: 6px solid var(--green); }
+  .login-card .error { color: var(--red); font-size: 0.9rem; }
+
+  /* Layout */
+  .app { display: grid; grid-template-columns: 236px 1fr; min-height: 100vh; }
+  .sidebar { background: var(--cream); padding: 24px 16px; display: flex; flex-direction: column; gap: 28px; border-right: 1px solid var(--line); }
+  .brand { display: flex; align-items: center; gap: 10px; padding: 0 8px; }
+  .brand-mark { background: var(--green); color: var(--ink); font-weight: 700; letter-spacing: 0.04em; padding: 6px 10px; border-radius: var(--radius-s); }
+  .brand-name { font-weight: 600; line-height: 1.2; font-size: 0.95rem; }
+  nav { display: grid; gap: 2px; }
+  nav button {
+    text-align: left; background: none; border: none; padding: 10px 12px; border-radius: var(--radius-s);
+    cursor: pointer; font-weight: 500; border-left: 4px solid transparent;
+  }
+  nav button:hover { background: var(--tan-tint); }
+  nav button[aria-current="page"] { background: var(--green-tint); border-left-color: var(--green); }
+  .user { margin-top: auto; padding: 0 8px; display: grid; gap: 8px; font-size: 0.85rem; color: var(--muted); word-break: break-all; }
+  main { padding: 36px 40px 64px; max-width: 1200px; width: 100%; }
+  .view { display: grid; gap: 24px; }
+  .view-head { display: grid; gap: 6px; }
+  .view-head p { color: var(--muted); max-width: 70ch; }
+  .panel { border: 1px solid var(--line); border-radius: var(--radius-m); padding: 24px; background: #fff; display: grid; gap: 18px; }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+
+  /* Upload */
+  .drop {
+    border: 2px dashed var(--tan); border-radius: var(--radius-m); padding: 28px; text-align: center;
+    background: var(--cream); cursor: pointer; display: grid; gap: 6px;
+  }
+  .drop.over { border-color: var(--green-deep); background: var(--green-tint); }
+  .drop strong { font-weight: 600; }
+  .progress { display: grid; gap: 10px; }
+  .progress ol { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
+  .progress li.now { font-weight: 600; }
+  .bar { height: 8px; background: var(--tan-tint); border-radius: 99px; overflow: hidden; }
+  .bar span { display: block; height: 100%; width: 0; background: var(--green); transition: width 0.3s; }
+  .result { border-left: 4px solid var(--green); padding: 12px 16px; background: var(--green-tint); border-radius: var(--radius-s); display: grid; gap: 8px; }
+  .result.review { border-color: var(--orange); background: var(--orange-tint); }
+  .result.failed { border-color: var(--red); background: var(--red-tint); }
+  .result ul { margin: 0; padding-left: 18px; }
+
+  /* Approval */
+  .approval { border: 2px solid var(--orange); }
+  .reason { background: var(--cream); padding: 12px 14px; border-radius: var(--radius-s); }
+  .prefixed { display: flex; align-items: stretch; }
+  .prefixed span { background: var(--tan-tint); border: 1px solid var(--line); border-right: none; padding: 9px 10px; border-radius: var(--radius-s) 0 0 var(--radius-s); color: var(--muted); }
+  .prefixed input { border-radius: 0 var(--radius-s) var(--radius-s) 0; }
+  .cols { display: grid; gap: 8px; }
+  .col-row { display: grid; grid-template-columns: 1.2fr 0.9fr 2fr auto; gap: 8px; align-items: center; }
+  .col-head { font-size: 0.8rem; color: var(--muted); font-weight: 500; }
+  .alt { border-top: 1px solid var(--line); padding-top: 16px; }
+
+  /* Tables */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-m); background: #fff; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: var(--cream); font-weight: 600; white-space: nowrap; position: sticky; top: 0; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr.clickable { cursor: pointer; }
+  tbody tr.clickable:hover { background: #fcf8f1; }
+  td.cell { max-width: 320px; overflow: hidden; text-overflow: ellipsis; }
+  .details td { background: var(--cream); }
+  .details-box { display: grid; gap: 10px; }
+  .details-box ul { margin: 0; padding-left: 18px; }
+
+  .pill { display: inline-block; padding: 2px 10px; border-radius: 99px; font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
+  .pill.done { background: var(--green-tint); color: var(--green-deep); }
+  .pill.needs_review, .pill.awaiting_approval { background: var(--orange-tint); color: var(--orange-deep); }
+  .pill.failed { background: var(--red-tint); color: var(--red); }
+  .pill.processing, .pill.pending { background: var(--tan-tint); color: var(--muted); }
+  .pill.rejected { background: #eee; color: #666; }
+  .tag { display: inline-block; font-size: 0.78rem; font-weight: 600; color: var(--green-deep); }
+
+  /* Search */
+  .results { display: grid; gap: 10px; }
+  .result-card { border: 1px solid var(--line); border-radius: var(--radius-m); padding: 14px 16px; background: #fff; display: grid; gap: 4px; cursor: pointer; text-align: left; }
+  .result-card:hover { border-color: var(--tan); }
+  .result-card .meta { display: flex; gap: 12px; color: var(--muted); font-size: 0.8rem; }
+  .empty { color: var(--muted); padding: 24px; text-align: center; border: 1px dashed var(--line); border-radius: var(--radius-m); }
+
+  /* Dialogs and toast */
+  dialog { border: none; border-radius: var(--radius-m); padding: 0; width: min(640px, 92vw); box-shadow: 0 12px 40px rgba(42, 40, 32, 0.25); }
+  dialog::backdrop { background: rgba(42, 40, 32, 0.45); }
+  .dialog-body { padding: 24px; display: grid; gap: 16px; max-height: 80vh; overflow: auto; }
+  .record { display: grid; grid-template-columns: minmax(120px, 0.4fr) 1fr; gap: 6px 16px; font-size: 0.9rem; }
+  .record dt { color: var(--muted); font-weight: 500; }
+  .record dd { margin: 0; white-space: pre-wrap; word-break: break-word; }
+  #toast { position: fixed; bottom: 20px; right: 20px; background: var(--ink); color: #fff; padding: 12px 18px; border-radius: var(--radius-s); max-width: 420px; font-size: 0.9rem; z-index: 50; }
+  #toast.error { background: var(--red); }
+
+  @media (max-width: 820px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px; border-right: none; border-bottom: 1px solid var(--line); }
+    nav { display: flex; overflow-x: auto; gap: 4px; width: 100%; order: 3; }
+    nav button { white-space: nowrap; border-left: none; border-bottom: 3px solid transparent; }
+    nav button[aria-current="page"] { border-bottom-color: var(--green); }
+    .user { margin: 0 0 0 auto; display: flex; align-items: center; }
+    .user span { display: none; }
+    main { padding: 24px 16px 48px; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .col-row { grid-template-columns: 1fr 1fr; }
+    .col-row .col-desc { grid-column: 1 / -1; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<!-- Sign in -->
+<div class="login" id="login-screen" hidden>
+  <form class="login-card" id="login-form">
+    <div class="brand"><span class="brand-mark">SOIL</span><span class="brand-name">Influencer Portal</span></div>
+    <p class="hint">Sign in with the email and password your admin set up for you.</p>
+    <label class="field">Email <input type="email" id="login-email" autocomplete="username" required></label>
+    <label class="field">Password <input type="password" id="login-password" autocomplete="current-password" required></label>
+    <p class="error" id="login-error" hidden></p>
+    <button class="btn primary" type="submit">Sign in</button>
+  </form>
+</div>
+
+<!-- Portal -->
+<div class="app" id="app" hidden>
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark">SOIL</span><span class="brand-name">Influencer<br>Portal</span></div>
+    <nav aria-label="Portal sections">
+      <button data-view="upload" aria-current="page">Upload</button>
+      <button data-view="uploads">Uploads</button>
+      <button data-view="search">Search</button>
+      <button data-view="browse">Browse data</button>
+      <button data-view="manage">Manage tables</button>
+    </nav>
+    <div class="user"><span id="user-email"></span><button class="btn quiet small" id="sign-out">Sign out</button></div>
+  </aside>
+
+  <main>
+    <!-- Upload -->
+    <section class="view" id="view-upload">
+      <div class="view-head">
+        <h2>Upload content</h2>
+        <p>Add a file and Claude will pull out the important information and save it in the right table. If it doesn’t fit any table yet, Claude will suggest a new one for you to approve.</p>
+      </div>
+
+      <form class="panel" id="upload-form">
+        <label class="field">What are you uploading?
+          <select id="up-type" required></select>
+          <span class="hint" id="up-type-desc"></span>
+        </label>
+
+        <label class="field" id="up-influencer-field" hidden>Which influencer is this about? <span class="hint">Optional. Leave it on "Several or not sure" if the file covers more than one person.</span>
+          <select id="up-influencer"></select>
+        </label>
+
+        <label class="field" id="up-replaces-field" hidden>Is this a newer version of an earlier upload? <span class="hint">Optional. The earlier file’s data is removed once this one is saved, so nothing is duplicated.</span>
+          <select id="up-replaces"></select>
+        </label>
+
+        <div>
+          <input type="file" id="up-file" hidden accept=".pdf,.docx,.xlsx,.xls,.csv,.tsv,.ods,.txt,.md,.srt,.vtt,.json,.png,.jpg,.jpeg,.webp,.gif">
+          <div class="drop" id="drop" tabindex="0" role="button" aria-describedby="drop-hint">
+            <strong id="drop-label">Drop a file here, or click to choose one</strong>
+            <span class="hint" id="drop-hint">PDF, Word (.docx), Excel, CSV, text, transcript (.srt, .vtt) or image. Up to 50 MB.</span>
+          </div>
+        </div>
+
+        <label class="field">Anything Claude should know about this file? <span class="hint">Optional. For example "figures are for the 2024-26 batch".</span>
+          <textarea id="up-notes" rows="2"></textarea>
+        </label>
+
+        <div class="row"><button class="btn primary" type="submit" id="up-submit">Upload and process</button></div>
+      </form>
+
+      <div class="panel progress" id="progress" hidden>
+        <h3 id="progress-title">Working on it</h3>
+        <div class="bar"><span id="progress-bar"></span></div>
+        <ol id="progress-steps"></ol>
+        <div id="progress-result"></div>
+      </div>
+
+      <div id="approval-slot"></div>
+    </section>
+
+    <!-- Uploads -->
+    <section class="view" id="view-uploads" hidden>
+      <div class="view-head">
+        <h2>Uploads</h2>
+        <p>Every file uploaded to the portal, newest first. Open a row to see warnings, errors and Claude’s reasoning.</p>
+      </div>
+      <div class="row"><button class="btn quiet small" id="uploads-refresh">Refresh</button></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>File</th><th>Type</th><th>Status</th><th>Rows</th><th>Uploaded</th></tr></thead>
+          <tbody id="uploads-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Search -->
+    <section class="view" id="view-search" hidden>
+      <div class="view-head">
+        <h2>Search</h2>
+        <p>Search everything the portal knows: brochures, calendars, influencer content, alumni news, social posts and any tables you’ve added.</p>
+      </div>
+      <form class="row" id="search-form">
+        <input type="search" id="search-q" placeholder="For example: PGPM placements, application deadline, alumni startup" style="flex: 1; min-width: 240px">
+        <button class="btn primary" type="submit">Search</button>
+      </form>
+      <div class="results" id="search-results"></div>
+    </section>
+
+    <!-- Browse -->
+    <section class="view" id="view-browse" hidden>
+      <div class="view-head">
+        <h2>Browse data</h2>
+        <p>See what has been saved in each table. Click a row to see the full record.</p>
+      </div>
+      <div class="row">
+        <select id="browse-table" style="max-width: 360px"></select>
+        <input type="search" id="browse-filter" placeholder="Filter these rows" style="max-width: 280px">
+        <span class="hint" id="browse-count"></span>
+      </div>
+      <div class="table-wrap" id="browse-wrap"></div>
+    </section>
+
+    <!-- Manage -->
+    <section class="view" id="view-manage" hidden>
+      <div class="view-head">
+        <h2>Manage tables</h2>
+        <p>Clearing a table removes all its data and the uploads that fed it. Deleting a table removes it from Supabase completely. Both are permanent. The eight core tables can be cleared but not deleted, because the portal is built around them.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Table</th><th>Used for</th><th>Rows</th><th>Kind</th><th></th></tr></thead>
+          <tbody id="manage-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Typed confirmation -->
+<dialog id="confirm-dialog">
+  <form class="dialog-body" method="dialog" id="confirm-form">
+    <h3 id="confirm-title"></h3>
+    <p id="confirm-message"></p>
+    <label class="field">Type <strong id="confirm-expected"></strong> to confirm
+      <input type="text" id="confirm-input" autocomplete="off">
+    </label>
+    <div class="row">
+      <button class="btn danger" id="confirm-ok" value="ok" disabled></button>
+      <button class="btn quiet" value="cancel" formnovalidate>Cancel</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Record view -->
+<dialog id="record-dialog">
+  <div class="dialog-body">
+    <div class="row" style="justify-content: space-between">
+      <h3 id="record-title">Record</h3>
+      <button class="btn quiet small" id="record-close">Close</button>
+    </div>
+    <dl class="record" id="record-body"></dl>
+  </div>
+</dialog>
+
+<div id="toast" hidden role="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+// =====================================================================
+// Fill these two in from Supabase: Project Settings > API.
+// Both are safe to put here; they're designed to be public.
+// Never put the service role key or the Claude API key in this file.
+// =====================================================================
+const CONFIG = {
+  SUPABASE_URL: "https://kicflvxuixpfywjmiepl.supabase.co",
+  SUPABASE_ANON_KEY: "sb_publishable_f4EzbafMl4bPo5OxC-z_SQ_Cqemafvl",
+};
+
+const BUCKET = "portal-uploads";
+const MAX_FILE_MB = 50;
+const STATUS_LABELS = {
+  pending: "Sorting", awaiting_approval: "Needs approval", processing: "Processing",
+  done: "Done", needs_review: "Check warnings", failed: "Failed", rejected: "Cancelled",
+};
+const COLUMN_TYPES = [
+  ["text", "Short text"], ["long_text", "Paragraph"], ["integer", "Whole number"],
+  ["number", "Number or money"], ["date", "Date"], ["boolean", "Yes or no"], ["list", "List"],
+];
+const HIDDEN_COLUMNS = new Set(["id", "search", "source_upload_id"]);
+
+const configured = !CONFIG.SUPABASE_URL.startsWith("PASTE") && !CONFIG.SUPABASE_ANON_KEY.startsWith("PASTE");
+const sb = configured ? supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY) : null;
+const state = { types: [], typeMap: {}, influencers: [], file: null, browseRows: [], busy: false };
+
+// ---------- small helpers ----------
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmtDate = (v) => v ? new Date(v).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }) : "";
+const fmtDay = (v) => v ? new Date(`${v}T00:00:00`).toLocaleDateString("en-IN", { dateStyle: "medium" }) : "";
+const typeLabel = (key) => key === "auto" ? "Let Claude decide" : (state.typeMap[key]?.label || key || "Not decided yet");
+const pill = (status) => `<span class="pill ${esc(status)}">${esc(STATUS_LABELS[status] || status)}</span>`;
+
+function toast(message, isError = false) {
+  const t = $("#toast");
+  t.textContent = message;
+  t.className = isError ? "error" : "";
+  t.hidden = false;
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => { t.hidden = true; }, isError ? 9000 : 4500);
+}
+
+function displayValue(v) {
+  if (v == null || v === "") return "";
+  if (Array.isArray(v)) return v.map((x) => typeof x === "object" ? JSON.stringify(x) : x).join(", ");
+  if (typeof v === "object") return JSON.stringify(v);
+  if (typeof v === "boolean") return v ? "Yes" : "No";
+  return String(v);
+}
+
+async function api(path, body) {
+  const { data: { session } } = await sb.auth.getSession();
+  const res = await fetch(path, {
+    method: "POST",
+    headers: { "content-type": "application/json", authorization: `Bearer ${session?.access_token || ""}` },
+    body: JSON.stringify(body),
+  });
+  let json = {};
+  try { json = await res.json(); } catch { /* not JSON */ }
+  if (res.status === 504) throw new Error("The server took too long on this section. Open Uploads and click Continue processing to carry on.");
+  if (!res.ok) throw new Error(json.error || `Request failed (${res.status}).`);
+  return json;
+}
+
+// ---------- sign in ----------
+async function boot() {
+  if (!configured) {
+    $("#login-screen").hidden = false;
+    const err = $("#login-error");
+    err.textContent = "The portal isn't set up yet: add the Supabase URL and anon key at the bottom of index.html.";
+    err.hidden = false;
+    $("#login-form button").disabled = true;
+    return;
+  }
+  const { data: { session } } = await sb.auth.getSession();
+  showScreen(session);
+  sb.auth.onAuthStateChange((_event, s) => showScreen(s));
+}
+
+let started = false;
+function showScreen(session) {
+  $("#login-screen").hidden = !!session;
+  $("#app").hidden = !session;
+  if (session) {
+    $("#user-email").textContent = session.user.email;
+    if (!started) { started = true; startApp(); }
+  } else {
+    started = false;
+  }
+}
+
+$("#login-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const err = $("#login-error");
+  err.hidden = true;
+  const { error } = await sb.auth.signInWithPassword({ email: $("#login-email").value.trim(), password: $("#login-password").value });
+  if (error) { err.textContent = "That email and password didn't match. Check them and try again."; err.hidden = false; }
+});
+$("#sign-out").addEventListener("click", () => sb.auth.signOut());
+
+async function startApp() {
+  await Promise.all([loadTypes(), loadInfluencers()]);
+  renderTypeSelect();
+  showView("upload");
+}
+
+// ---------- navigation ----------
+document.querySelectorAll("nav button").forEach((b) => b.addEventListener("click", () => showView(b.dataset.view)));
+function showView(name) {
+  document.querySelectorAll("nav button").forEach((b) => { if (b.dataset.view === name) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
+  document.querySelectorAll("main .view").forEach((v) => { v.hidden = v.id !== `view-${name}`; });
+  if (name === "uploads") loadUploads();
+  if (name === "browse") loadBrowseTables();
+  if (name === "manage") loadManage();
+  if (name === "search") $("#search-q").focus();
+}
+
+// ---------- shared data ----------
+async function loadTypes() {
+  const { data, error } = await sb.from("content_types").select("key,label,description,is_core,table_name,columns").order("is_core", { ascending: false }).order("label");
+  if (error) return toast(`Could not load content types: ${error.message}`, true);
+  state.types = data;
+  state.typeMap = Object.fromEntries(data.map((t) => [t.key, t]));
+}
+
+async function loadInfluencers() {
+  const { data, error } = await sb.from("influencers").select("id,name").order("name");
+  if (!error) state.influencers = data;
+}
+
+// ---------- upload form ----------
+function renderTypeSelect() {
+  const core = state.types.filter((t) => t.is_core);
+  const custom = state.types.filter((t) => !t.is_core);
+  const opt = (t) => `<option value="${esc(t.key)}">${esc(t.label)}</option>`;
+  $("#up-type").innerHTML =
+    `<option value="auto">Something else, let Claude decide</option>` +
+    `<optgroup label="Core types">${core.map(opt).join("")}</optgroup>` +
+    (custom.length ? `<optgroup label="Types you added">${custom.map(opt).join("")}</optgroup>` : "");
+  onTypeChange();
+}
+
+$("#up-type").addEventListener("change", onTypeChange);
+async function onTypeChange() {
+  const key = $("#up-type").value;
+  $("#up-type-desc").textContent = key === "auto"
+    ? "Claude will match it to an existing type, or suggest a new table for you to approve."
+    : (state.typeMap[key]?.description || "");
+
+  const isTranscript = key === "influencer_transcript";
+  $("#up-influencer-field").hidden = !isTranscript;
+  if (isTranscript) {
+    $("#up-influencer").innerHTML = `<option value="">Several or not sure</option>` +
+      state.influencers.map((i) => `<option value="${esc(i.id)}">${esc(i.name)}</option>`).join("");
+  }
+
+  $("#up-replaces-field").hidden = true;
+  if (key !== "auto") {
+    const { data } = await sb.from("uploads").select("id,file_name,uploaded_at")
+      .eq("content_type", key).eq("is_current", true).in("status", ["done", "needs_review"])
+      .order("uploaded_at", { ascending: false }).limit(50);
+    if (data?.length) {
+      $("#up-replaces").innerHTML = `<option value="">No, this is new</option>` +
+        data.map((u) => `<option value="${esc(u.id)}">${esc(u.file_name)} (${esc(fmtDate(u.uploaded_at))})</option>`).join("");
+      $("#up-replaces-field").hidden = false;
+    }
+  }
+}
+
+const drop = $("#drop");
+drop.addEventListener("click", () => $("#up-file").click());
+drop.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); $("#up-file").click(); } });
+drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("over"); });
+drop.addEventListener("dragleave", () => drop.classList.remove("over"));
+drop.addEventListener("drop", (e) => { e.preventDefault(); drop.classList.remove("over"); if (e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]); });
+$("#up-file").addEventListener("change", (e) => { if (e.target.files[0]) setFile(e.target.files[0]); });
+
+function setFile(file) {
+  if (file.size > MAX_FILE_MB * 1024 * 1024) {
+    toast(`That file is over ${MAX_FILE_MB} MB. Split it or compress it and try again.`, true);
+    return;
+  }
+  state.file = file;
+  $("#drop-label").textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+}
+
+$("#upload-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (state.busy) return;
+  if (!state.file) return toast("Choose a file first.", true);
+  state.busy = true;
+  $("#up-submit").disabled = true;
+  $("#approval-slot").innerHTML = "";
+  const file = state.file;
+  const contentType = $("#up-type").value;
+
+  startProgress(`Processing ${file.name}`);
+  try {
+    step("Uploading the file");
+    const safeName = file.name.replace(/[^\w.\-]+/g, "_");
+    const path = `${contentType}/${Date.now()}-${safeName}`;
+    const { error: upErr } = await sb.storage.from(BUCKET).upload(path, file, { contentType: file.type || undefined, upsert: false });
+    if (upErr) throw new Error(`The file couldn't be uploaded: ${upErr.message}`);
+
+    step(contentType === "auto" ? "Claude is working out where this belongs" : "Registering the upload");
+    const r = await api("/api/process", {
+      action: "start",
+      storagePath: path,
+      fileName: file.name,
+      mimeType: file.type || null,
+      fileSize: file.size,
+      contentType,
+      notes: $("#up-notes").value.trim() || null,
+      influencerId: contentType === "influencer_transcript" ? ($("#up-influencer").value || null) : null,
+      replacesUploadId: $("#up-replaces-field").hidden ? null : ($("#up-replaces").value || null),
+    });
+
+    resetForm();
+    if (r.status === "awaiting_approval") {
+      step("Claude suggests a new table. Review it below.");
+      setBar(30);
+      renderApproval(r.uploadId, r.proposal, r.reason);
+    } else {
+      if (r.decidedLabel) step(`Matched to "${r.decidedLabel}". ${r.reason || ""}`);
+      await runSections(r.uploadId);
+    }
+  } catch (err) {
+    showResult({ status: "failed", error: err.message });
+  } finally {
+    state.busy = false;
+    $("#up-submit").disabled = false;
+  }
+});
+
+function resetForm() {
+  state.file = null;
+  $("#up-file").value = "";
+  $("#up-notes").value = "";
+  $("#drop-label").textContent = "Drop a file here, or click to choose one";
+}
+
+// ---------- progress ----------
+function startProgress(title) {
+  $("#progress").hidden = false;
+  $("#progress-title").textContent = title;
+  $("#progress-steps").innerHTML = "";
+  $("#progress-result").innerHTML = "";
+  setBar(5);
+}
+function step(text) {
+  const list = $("#progress-steps");
+  list.querySelectorAll("li").forEach((li) => li.classList.remove("now"));
+  const li = document.createElement("li");
+  li.textContent = text;
+  li.className = "now";
+  list.appendChild(li);
+}
+function setBar(pct) { $("#progress-bar").style.width = `${Math.max(0, Math.min(100, pct))}%`; }
+
+async function runSections(uploadId) {
+  $("#progress").hidden = false;
+  step("Claude is synthesizing the content");
+  setBar(35);
+  let r;
+  do {
+    r = await api("/api/process", { action: "section", uploadId });
+    if (!r.done && r.sectionsTotal) {
+      step(`Section ${r.sectionsDone} of ${r.sectionsTotal} done`);
+      setBar(35 + (60 * r.sectionsDone) / r.sectionsTotal);
+    }
+  } while (!r.done);
+  setBar(100);
+  showResult(r);
+  loadInfluencers();
+  return r;
+}
+
+function showResult(r) {
+  const box = $("#progress-result");
+  $("#progress-steps").querySelectorAll("li").forEach((li) => li.classList.remove("now"));
+  if (r.status === "failed") {
+    box.innerHTML = `<div class="result failed"><strong>Processing failed</strong><p>${esc(r.error || "Something went wrong.")}</p><p class="hint">You can retry from the Uploads screen.</p></div>`;
+    return;
+  }
+  const warnings = r.warnings || [];
+  const cls = warnings.length ? "result review" : "result";
+  const title = warnings.length
+    ? `Saved ${r.rowsCreated ?? 0} rows. A few things need checking:`
+    : `Done. Saved ${r.rowsCreated ?? 0} rows.`;
+  box.innerHTML = `<div class="${cls}"><strong>${esc(title)}</strong>${warnings.length ? `<ul>${warnings.map((w) => `<li>${esc(w)}</li>`).join("")}</ul>` : ""}</div>`;
+}
+
+// ---------- approval of a new table ----------
+function renderApproval(uploadId, proposal, reason) {
+  const p = proposal || { columns: [] };
+  const tableSuffix = String(p.table_name || "").replace(/^custom_/, "");
+  const existingOptions = state.types.map((t) => `<option value="${esc(t.key)}">${esc(t.label)}</option>`).join("");
+
+  $("#approval-slot").innerHTML = `
+    <div class="panel approval" id="approval">
+      <div class="view-head">
+        <h3>Claude suggests a new table</h3>
+        ${reason ? `<p class="reason">${esc(reason)}</p>` : ""}
+        <p class="hint">Check the name and columns. You can rename, add or remove columns before creating it. Future uploads of this kind will go into the same table automatically.</p>
+      </div>
+      <div class="grid-2">
+        <label class="field">Name people will see <input type="text" id="ap-label" value="${esc(p.label || "")}"></label>
+        <label class="field">Table name in Supabase
+          <div class="prefixed"><span>custom_</span><input type="text" id="ap-table" value="${esc(tableSuffix)}"></div>
+        </label>
+      </div>
+      <label class="field">What this content is <span class="hint">Claude uses this to recognise future uploads of the same kind.</span>
+        <textarea id="ap-desc" rows="2">${esc(p.description || "")}</textarea>
+      </label>
+      <details>
+        <summary>Extraction instructions Claude will follow</summary>
+        <textarea id="ap-instr" rows="7" style="margin-top: 10px">${esc(p.instructions || "")}</textarea>
+      </details>
+      <div class="cols">
+        <h4>Columns</h4>
+        <div class="col-row col-head"><span>Column name</span><span>Type</span><span class="col-desc">What goes in it</span><span></span></div>
+        <div id="ap-cols"></div>
+        <div><button class="btn quiet small" type="button" id="ap-add">Add a column</button></div>
+      </div>
+      <div class="grid-2">
+        <label class="field">Column that names each row <select id="ap-title"></select></label>
+        <label class="field">Column that summarises each row <select id="ap-snippet"></select></label>
+      </div>
+      <div class="row">
+        <button class="btn primary" type="button" id="ap-approve">Create table and process</button>
+        <button class="btn quiet" type="button" id="ap-reject">Cancel this upload</button>
+      </div>
+      <div class="row alt">
+        <span>Or save it into an existing type:</span>
+        <select id="ap-existing" style="max-width: 280px">${existingOptions}</select>
+        <button class="btn quiet" type="button" id="ap-use-existing">Use this type</button>
+      </div>
+    </div>`;
+
+  (p.columns || []).forEach((c) => addColumnRow(c));
+  if (!(p.columns || []).length) addColumnRow({ type: "text" });
+  refreshTitleSelects(p.title_column, p.snippet_column);
+
+  $("#ap-add").addEventListener("click", () => { addColumnRow({ type: "text" }); refreshTitleSelects(); });
+  $("#ap-cols").addEventListener("input", () => refreshTitleSelects());
+  $("#ap-cols").addEventListener("change", () => refreshTitleSelects());
+
+  $("#ap-approve").addEventListener("click", () => decideApproval(uploadId, "approve"));
+  $("#ap-reject").addEventListener("click", () => decideApproval(uploadId, "reject"));
+  $("#ap-use-existing").addEventListener("click", () => decideApproval(uploadId, "use_existing"));
+  $("#approval").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function addColumnRow(c) {
+  const row = document.createElement("div");
+  row.className = "col-row";
+  row.innerHTML = `
+    <input type="text" class="c-name" aria-label="Column name" value="${esc(c.name || "")}" placeholder="column_name">
+    <select class="c-type" aria-label="Column type">${COLUMN_TYPES.map(([v, l]) => `<option value="${v}" ${v === c.type ? "selected" : ""}>${l}</option>`).join("")}</select>
+    <input type="text" class="c-desc col-desc" aria-label="Column description" value="${esc(c.description || "")}" placeholder="What goes in this column">
+    <button class="btn quiet small" type="button" aria-label="Remove column">Remove</button>`;
+  row.querySelector("button").addEventListener("click", () => { row.remove(); refreshTitleSelects(); });
+  $("#ap-cols").appendChild(row);
+}
+
+function readColumns() {
+  return [...document.querySelectorAll("#ap-cols .col-row")].map((r) => ({
+    name: r.querySelector(".c-name").value.trim().toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, ""),
+    type: r.querySelector(".c-type").value,
+    description: r.querySelector(".c-desc").value.trim(),
+  })).filter((c) => c.name);
+}
+
+function refreshTitleSelects(titleWanted, snippetWanted) {
+  const textCols = readColumns().filter((c) => c.type === "text" || c.type === "long_text").map((c) => c.name);
+  for (const [id, wanted] of [["#ap-title", titleWanted], ["#ap-snippet", snippetWanted]]) {
+    const sel = $(id);
+    const keep = wanted || sel.value;
+    sel.innerHTML = `<option value="">Pick automatically</option>` + textCols.map((n) => `<option value="${esc(n)}">${esc(n)}</option>`).join("");
+    if (textCols.includes(keep)) sel.value = keep;
+  }
+}
+
+async function decideApproval(uploadId, decision) {
+  const buttons = document.querySelectorAll("#approval button");
+  buttons.forEach((b) => { b.disabled = true; });
+  try {
+    if (decision === "approve") {
+      const proposal = {
+        label: $("#ap-label").value.trim(),
+        table_name: `custom_${$("#ap-table").value.trim().toLowerCase().replace(/^custom_/, "")}`,
+        description: $("#ap-desc").value.trim(),
+        instructions: $("#ap-instr").value.trim(),
+        columns: readColumns(),
+        title_column: $("#ap-title").value || null,
+        snippet_column: $("#ap-snippet").value || null,
+      };
+      step("Creating the new table");
+      const r = await api("/api/approve", { uploadId, decision, proposal });
+      toast(`Created table ${r.table}.`);
+      await loadTypes();
+      renderTypeSelect();
+    } else if (decision === "use_existing") {
+      await api("/api/approve", { uploadId, decision, contentType: $("#ap-existing").value });
+    } else {
+      await api("/api/approve", { uploadId, decision });
+      $("#approval-slot").innerHTML = "";
+      step("Upload cancelled");
+      return;
+    }
+    $("#approval-slot").innerHTML = "";
+    await runSections(uploadId);
+  } catch (err) {
+    toast(err.message, true);
+    buttons.forEach((b) => { b.disabled = false; });
+  }
+}
+
+// ---------- uploads list ----------
+$("#uploads-refresh").addEventListener("click", loadUploads);
+async function loadUploads() {
+  const body = $("#uploads-body");
+  const { data, error } = await sb.from("uploads")
+    .select("id,file_name,requested_type,content_type,status,rows_created,uploaded_at,processed_at,warnings,error,classification_reason,proposal,is_current,notes")
+    .order("uploaded_at", { ascending: false }).limit(100);
+  if (error) return toast(`Could not load uploads: ${error.message}`, true);
+  if (!data.length) {
+    body.innerHTML = `<tr><td colspan="5"><div class="empty">Nothing uploaded yet. Start on the Upload screen.</div></td></tr>`;
+    return;
+  }
+  body.innerHTML = data.map((u) => `
+    <tr class="clickable" data-id="${esc(u.id)}">
+      <td>${esc(u.file_name)}${u.is_current ? "" : ` <span class="hint">(replaced)</span>`}</td>
+      <td>${esc(typeLabel(u.content_type || u.requested_type))}</td>
+      <td>${pill(u.status)}</td>
+      <td>${u.rows_created || 0}</td>
+      <td>${esc(fmtDate(u.uploaded_at))}</td>
+    </tr>`).join("");
+  body.querySelectorAll("tr.clickable").forEach((tr) => {
+    tr.addEventListener("click", () => toggleUploadDetails(tr, data.find((u) => u.id === tr.dataset.id)));
+  });
+}
+
+function toggleUploadDetails(tr, u) {
+  const next = tr.nextElementSibling;
+  if (next?.classList.contains("details")) { next.remove(); return; }
+  const warnings = Array.isArray(u.warnings) ? u.warnings : [];
+  const typeOptions = state.types.map((t) => `<option value="${esc(t.key)}" ${t.key === u.content_type ? "selected" : ""}>${esc(t.label)}</option>`).join("");
+  const actions = [];
+  if (u.status === "awaiting_approval") actions.push(`<button class="btn primary small" data-act="review">Review proposed table</button>`);
+  if (u.status === "processing") actions.push(`<button class="btn primary small" data-act="continue">Continue processing</button>`);
+  if (["done", "needs_review", "failed", "rejected"].includes(u.status)) {
+    actions.push(`<select class="reprocess-type" style="max-width: 240px" aria-label="Process as">${typeOptions}</select><button class="btn quiet small" data-act="reprocess">Reprocess</button>`);
+  }
+  actions.push(`<button class="btn danger small" data-act="delete">Delete upload</button>`);
+
+  const row = document.createElement("tr");
+  row.className = "details";
+  row.innerHTML = `<td colspan="5"><div class="details-box">
+    ${u.error ? `<p><strong>Error:</strong> ${esc(u.error)}</p>` : ""}
+    ${u.classification_reason ? `<p><strong>Claude’s reasoning:</strong> ${esc(u.classification_reason)}</p>` : ""}
+    ${u.notes ? `<p><strong>Your notes:</strong> ${esc(u.notes)}</p>` : ""}
+    ${warnings.length ? `<div><strong>Warnings to check:</strong><ul>${warnings.map((w) => `<li>${esc(w)}</li>`).join("")}</ul></div>` : ""}
+    ${u.processed_at ? `<p class="hint">Processed ${esc(fmtDate(u.processed_at))}</p>` : ""}
+    <div class="row">${actions.join("")}</div>
+  </div></td>`;
+  tr.after(row);
+
+  row.querySelectorAll("[data-act]").forEach((b) => b.addEventListener("click", async (e) => {
+    e.stopPropagation();
+    const act = b.dataset.act;
+    try {
+      if (act === "review") {
+        showView("upload");
+        startProgress(`Processing ${u.file_name}`);
+        step("Claude suggests a new table. Review it below.");
+        renderApproval(u.id, u.proposal, u.classification_reason);
+      } else if (act === "continue" || act === "reprocess") {
+        if (act === "reprocess") {
+          const ct = row.querySelector(".reprocess-type").value;
+          await api("/api/manage", { action: "reprocess", uploadId: u.id, contentType: ct });
+        }
+        showView("upload");
+        startProgress(`Processing ${u.file_name}`);
+        await runSections(u.id);
+      } else if (act === "delete") {
+        const ok = await confirmTyped({
+          title: "Delete this upload?",
+          message: `This removes ${u.file_name} and the ${u.rows_created || 0} rows it created. Influencer profiles it added are kept.`,
+          expected: "delete",
+          action: "Delete upload",
+        });
+        if (!ok) return;
+        await api("/api/manage", { action: "delete_upload", uploadId: u.id });
+        toast("Upload deleted.");
+        loadUploads();
+      }
+    } catch (err) {
+      toast(err.message, true);
+      if (act !== "delete") showResult({ status: "failed", error: err.message });
+    }
+  }));
+}
+
+// ---------- search ----------
+$("#search-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const q = $("#search-q").value.trim();
+  const box = $("#search-results");
+  if (!q) return;
+  box.innerHTML = `<p class="hint">Searching</p>`;
+  const { data, error } = await sb.rpc("search_portal", { q, max_results: 50 });
+  if (error) { box.innerHTML = ""; return toast(`Search failed: ${error.message}`, true); }
+  if (!data.length) {
+    box.innerHTML = `<div class="empty">Nothing matched "${esc(q)}". Try fewer or different words.</div>`;
+    return;
+  }
+  box.innerHTML = data.map((r, i) => `
+    <button class="result-card" data-i="${i}">
+      <span class="meta"><span class="tag">${esc(r.result_type)}</span>${r.result_date ? `<span>${esc(fmtDay(r.result_date))}</span>` : ""}</span>
+      <strong>${esc(r.result_title || "Untitled")}</strong>
+      ${r.snippet ? `<span>${esc(r.snippet)}</span>` : ""}
+    </button>`).join("");
+  box.querySelectorAll(".result-card").forEach((b) => b.addEventListener("click", () => {
+    const r = data[Number(b.dataset.i)];
+    openRecord(r.result_table, r.result_id, r.result_title);
+  }));
+});
+
+async function openRecord(table, id, title) {
+  const { data, error } = await sb.from(table).select("*").eq("id", id).maybeSingle();
+  if (error || !data) return toast("Could not open that record.", true);
+  showRecord(title || table, data);
+}
+
+function showRecord(title, row) {
+  $("#record-title").textContent = title;
+  $("#record-body").innerHTML = Object.entries(row)
+    .filter(([k]) => !HIDDEN_COLUMNS.has(k))
+    .map(([k, v]) => `<dt>${esc(k.replace(/_/g, " "))}</dt><dd>${esc(displayValue(v)) || `<span class="hint">empty</span>`}</dd>`)
+    .join("");
+  $("#record-dialog").showModal();
+}
+$("#record-close").addEventListener("click", () => $("#record-dialog").close());
+
+// ---------- browse ----------
+async function loadBrowseTables() {
+  const { data, error } = await sb.rpc("table_stats");
+  if (error) return toast(`Could not load tables: ${error.message}`, true);
+  const sel = $("#browse-table");
+  const current = sel.value;
+  sel.innerHTML = data.map((t) => `<option value="${esc(t.t_table)}">${esc(t.t_labels)} (${t.t_rows})</option>`).join("");
+  if (data.some((t) => t.t_table === current)) sel.value = current;
+  loadBrowseRows();
+}
+$("#browse-table").addEventListener("change", loadBrowseRows);
+$("#browse-filter").addEventListener("input", renderBrowseRows);
+
+async function loadBrowseRows() {
+  const table = $("#browse-table").value;
+  if (!table) return;
+  const { data, error } = await sb.from(table).select("*").order("created_at", { ascending: false }).limit(300);
+  if (error) return toast(`Could not load ${table}: ${error.message}`, true);
+  state.browseRows = data;
+  renderBrowseRows();
+}
+
+function renderBrowseRows() {
+  const wrap = $("#browse-wrap");
+  const filter = $("#browse-filter").value.trim().toLowerCase();
+  const rows = state.browseRows.filter((r) => !filter || JSON.stringify(r).toLowerCase().includes(filter));
+  $("#browse-count").textContent = `${rows.length} shown${state.browseRows.length >= 300 ? " (latest 300)" : ""}`;
+  if (!rows.length) {
+    wrap.innerHTML = `<div class="empty">${state.browseRows.length ? "No rows match that filter." : "This table is empty. Upload a file of this type to fill it."}</div>`;
+    return;
+  }
+  const cols = Object.keys(rows[0]).filter((k) => !HIDDEN_COLUMNS.has(k) && k !== "created_at");
+  wrap.innerHTML = `<table><thead><tr>${cols.map((c) => `<th>${esc(c.replace(/_/g, " "))}</th>`).join("")}</tr></thead>
+    <tbody>${rows.map((r, i) => `<tr class="clickable" data-i="${i}">${cols.map((c) => `<td class="cell" title="${esc(displayValue(r[c]))}">${esc(displayValue(r[c]).slice(0, 140))}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+  wrap.querySelectorAll("tr.clickable").forEach((tr) => tr.addEventListener("click", () => showRecord($("#browse-table").selectedOptions[0].textContent, rows[Number(tr.dataset.i)])));
+}
+
+// ---------- manage ----------
+async function loadManage() {
+  const { data, error } = await sb.rpc("table_stats");
+  if (error) return toast(`Could not load tables: ${error.message}`, true);
+  const body = $("#manage-body");
+  body.innerHTML = data.map((t) => `
+    <tr>
+      <td><strong>${esc(t.t_table)}</strong></td>
+      <td>${esc(t.t_labels)}</td>
+      <td>${t.t_rows}</td>
+      <td>${t.t_is_core ? "Core" : "Added by you"}</td>
+      <td><div class="row">
+        <button class="btn quiet small" data-act="clear" data-table="${esc(t.t_table)}" data-rows="${t.t_rows}">Clear data</button>
+        ${t.t_is_core ? "" : `<button class="btn danger small" data-act="delete" data-table="${esc(t.t_table)}" data-rows="${t.t_rows}">Delete table</button>`}
+      </div></td>
+    </tr>`).join("");
+  body.querySelectorAll("[data-act]").forEach((b) => b.addEventListener("click", () => manageTable(b.dataset.act, b.dataset.table, b.dataset.rows)));
+}
+
+async function manageTable(act, table, rows) {
+  const deleting = act === "delete";
+  const ok = await confirmTyped({
+    title: deleting ? `Delete the table ${table}?` : `Clear all data in ${table}?`,
+    message: deleting
+      ? `This permanently deletes the table, its ${rows} rows, and every upload of this type, including the original files. This can't be undone.`
+      : `This permanently removes all ${rows} rows and every upload that fed this table, including the original files. The table itself stays, ready for new uploads.`,
+    expected: table,
+    action: deleting ? "Delete table" : "Clear data",
+  });
+  if (!ok) return;
+  try {
+    await api("/api/manage", { action: deleting ? "delete_table" : "clear_table", table, confirm: table });
+    toast(deleting ? `Deleted ${table}.` : `Cleared ${table}.`);
+    await loadTypes();
+    renderTypeSelect();
+    loadManage();
+  } catch (err) {
+    toast(err.message, true);
+  }
+}
+
+// ---------- typed confirmation ----------
+function confirmTyped({ title, message, expected, action }) {
+  return new Promise((resolve) => {
+    const dlg = $("#confirm-dialog");
+    const input = $("#confirm-input");
+    const okBtn = $("#confirm-ok");
+    $("#confirm-title").textContent = title;
+    $("#confirm-message").textContent = message;
+    $("#confirm-expected").textContent = expected;
+    okBtn.textContent = action;
+    okBtn.disabled = true;
+    input.value = "";
+    input.oninput = () => { okBtn.disabled = input.value.trim() !== expected; };
+    dlg.onclose = () => resolve(dlg.returnValue === "ok" && input.value.trim() === expected);
+    dlg.returnValue = "";
+    dlg.showModal();
+    input.focus();
+  });
+}
+
+boot();
+</script>
+</body>
+</html>
