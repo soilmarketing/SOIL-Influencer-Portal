@@ -4,6 +4,29 @@ const RETRY_STATUSES = new Set([429, 500, 502, 503, 529]);
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 export async function callClaude(body) {
+  // Some models don't allow forcing a tool. If a request tries to, ask for
+  // the tool instead and retry if Claude replies in plain text.
+  if (body?.tool_choice?.type === "tool") return callClaudeForTool(body, body.tool_choice.name);
+  return send(body);
+}
+
+export async function callClaudeForTool(body, toolName) {
+  const request = { ...body, messages: [...body.messages] };
+  delete request.tool_choice;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    const response = await send(request);
+    if (response?.content?.some((b) => b.type === "tool_use" && b.name === toolName)) return response;
+    if (response?.stop_reason === "max_tokens") return response; // reported clearly by the caller
+    request.messages = [
+      ...request.messages,
+      { role: "assistant", content: response?.content?.length ? response.content : [{ type: "text", text: "(no reply)" }] },
+      { role: "user", content: `Please call the ${toolName} tool now with your result. Do not answer in plain text.` },
+    ];
+  }
+  throw new Error(`Claude didn't return its result in the expected format (${toolName}). Click Reprocess to try again.`);
+}
+
+async function send(body) {
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) throw new Error("ANTHROPIC_API_KEY is missing in Vercel's environment variables.");
 
