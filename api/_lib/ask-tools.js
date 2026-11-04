@@ -8,13 +8,14 @@ const COLUMN_NAME = /^[a-z][a-z0-9_]{0,62}$/;
 
 // Columns of the core tables, so Claude knows what it can ask for.
 const CORE_COLUMNS = {
-  influencers: "name, handles (list of platform, handle, url, followers), primary_platform, niche, audience_description, audience_location, languages, content_style, agency, contact_person, contact_email, contact_phone, city, notes",
+  influencers: "name, relationship_status (prospect, active, paused, ended), handles (list of platform, handle, url, followers), primary_platform, niche, audience_description, audience_location, languages, content_style, agency, contact_person, contact_email, contact_phone, city, notes",
   influencer_budgets: "influencer_id, influencer_name_raw, financial_year, period_label, period_start, period_end, amount, amount_text, currency, deliverables, deliverable_count, campaign, notes",
   influencer_content: "influencer_id, influencer_name_raw, platform, content_format, published_date, title, summary, topics (list), tone, hooks (list), key_phrases (list), notable_quotes (list), call_to_action, mentions_soil, soil_mentions, programs_mentioned (list), performance",
   calendar_events: "title, category, event_date, end_date, date_is_approximate, time_text, program, academic_year, is_previous_year, description",
   knowledge_items: "document_title, document_kind, category, program, academic_year, fact, figures, source_page",
   social_posts: "platform, posted_date, post_format, theme, summary, caption_text, hashtags (list), programs_mentioned (list), people_featured (list), call_to_action, link_url, performance",
   alumni_activity: "alumnus_name, batch, program, job_title, company, activity_type, activity_date, summary, story_angle, source_link",
+  deliverables: "influencer_id, title, campaign, program, platform, format, status, due_date, post_date, fee, currency, post_url, views, likes, comments, shares, brief, script, notes, paid_on, updated_at",
 };
 
 // ---------------------------------------------------------------------
@@ -28,6 +29,8 @@ export async function buildAskContext(db) {
   if (e1 || e2) throw new Error(`Could not read the portal's tables: ${(e1 || e2).message}`);
 
   const allowedTables = new Set(stats.map((s) => s.t_table));
+  allowedTables.add("deliverables");
+  const { count: deliverableCount } = await db.from("deliverables").select("id", { count: "exact", head: true });
   const tableLines = stats.map((s) => {
     const custom = types.find((t) => t.table_name === s.t_table && !t.is_core);
     const cols = custom
@@ -35,7 +38,7 @@ export async function buildAskContext(db) {
       : CORE_COLUMNS[s.t_table] || "";
     const about = custom?.description ? ` ${custom.description}` : "";
     return `- ${s.t_table} (${s.t_rows} rows; ${s.t_labels}).${about}\n  Columns: id, ${cols}, created_at`;
-  }).join("\n");
+  }).join("\n") + `\n- deliverables (${deliverableCount ?? 0} rows; the content tracker: every piece of content an influencer makes for SOIL).\n  Columns: id, ${CORE_COLUMNS.deliverables}, created_at`;
 
   const today = new Date().toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata", dateStyle: "full" });
 
@@ -51,12 +54,13 @@ ${tableLines}
 How to work:
 1. Before answering, look up what you need with the tools. Use search_portal for keywords across everything, influencer_profile for anything about a specific influencer, and read_table for lists, dates, budgets or full records. Several lookups are fine; check the data rather than assume.
 2. Facts about SOIL (fees, placements, rankings, dates, deadlines, alumni, budgets, follower counts) must come from the portal's data. Never invent or estimate them. If something isn't in the data, say so plainly and leave a clear placeholder such as [add latest placement figure] instead of guessing.
-3. The budget table records allocations, not spending. If asked how much budget is left or used, explain that the portal only holds allocations.
-4. When writing for a specific influencer, match their voice using the tone, hooks and key phrases from their past content.
-5. Content an influencer posts for SOIL is paid promotion. When you write influencer content, add a short reminder that it needs a clear disclosure label (such as #ad or #collab) under Indian advertising (ASCI) guidelines.
-6. Be practical and ready to use. Use headings and lists when they make the output easier to copy. Write in English unless asked otherwise; Hinglish is fine when matching an influencer who uses it.
-7. When your answer uses portal data, end with one short line starting "Based on:" naming what you used (for example: Rahul's last 5 reels, the 2026-27 calendar, the PGPM brochure).
-8. The person sees only your final answer, not your lookups.`;
+3. Budgets: influencer_budgets holds allocations. Spending comes from the deliverables table: the fee of every deliverable that isn't cancelled counts as committed, and deliverables with status "paid" count as paid. Remaining budget = allocation minus committed, for the same financial year (April to March, based on post_date, or due_date if there is no post_date).
+4. Content tracker stages, in order: planned, brief_sent, script_review, content_review, approved, posted, invoiced, paid (plus cancelled). A deliverable is overdue when its due_date has passed and it hasn't reached posted yet.
+5. When writing for a specific influencer, match their voice using the tone, hooks and key phrases from their past content.
+6. Content an influencer posts for SOIL is paid promotion. When you write influencer content, add a short reminder that it needs a clear disclosure label (such as #ad or #collab) under Indian advertising (ASCI) guidelines.
+7. Be practical and ready to use. Use headings and lists when they make the output easier to copy. Write in English unless asked otherwise; Hinglish is fine when matching an influencer who uses it.
+8. When your answer uses portal data, end with one short line starting "Based on:" naming what you used (for example: Rahul's last 5 reels, the 2026-27 calendar, the PGPM brochure).
+9. The person sees only your final answer, not your lookups.`;
 
   return { system, allowedTables };
 }
@@ -76,7 +80,7 @@ export const ASK_TOOLS = [
   },
   {
     name: "influencer_profile",
-    description: "Everything about one influencer: profile, handles and followers, budget allocations, and their past content with summaries, tone, hooks and key phrases. Accepts a name or a social handle.",
+    description: "Everything about one influencer: profile, handles and followers, budget allocations, their deliverables in the content tracker, and their past content with summaries, tone, hooks and key phrases. Accepts a name or a social handle.",
     input_schema: {
       type: "object",
       properties: { name: { type: "string", description: "Influencer name or handle" } },
@@ -185,18 +189,20 @@ async function influencerProfile(db, { name }) {
     return { error: `No influencer matches "${name}".`, known_influencers: (all || []).map((a) => a.name) };
   }
 
-  const [profile, budgets, content, aliases] = await Promise.all([
+  const [profile, budgets, content, aliases, deliverables] = await Promise.all([
     db.from("influencers").select("*").eq("id", id).single(),
     db.from("influencer_budgets").select("*").eq("influencer_id", id).order("period_start", { ascending: true }),
     db.from("influencer_content").select("*").eq("influencer_id", id)
       .order("published_date", { ascending: false, nullsFirst: false }).limit(30),
     db.from("influencer_aliases").select("alias").eq("influencer_id", id),
+    db.from("deliverables").select("*").eq("influencer_id", id).order("due_date", { ascending: true, nullsFirst: false }),
   ]);
   return {
     profile: clean(profile.data),
     also_known_as: (aliases.data || []).map((a) => a.alias),
     budget_allocations: (budgets.data || []).map(clean),
     past_content: (content.data || []).map(clean),
+    content_tracker: (deliverables.data || []).map(clean),
   };
 }
 
