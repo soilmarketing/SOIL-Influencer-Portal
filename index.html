@@ -432,7 +432,13 @@ $("#login-form").addEventListener("submit", async (e) => {
   const err = $("#login-error");
   err.hidden = true;
   const { error } = await sb.auth.signInWithPassword({ email: $("#login-email").value.trim(), password: $("#login-password").value });
-  if (error) { err.textContent = "That email and password didn't match. Check them and try again."; err.hidden = false; }
+  if (error) {
+    const msg = error.message || "";
+    if (/invalid login credentials/i.test(msg)) err.textContent = "That email and password didn't match. Check them and try again.";
+    else if (/not confirmed/i.test(msg)) err.textContent = "This user isn't confirmed yet. In Supabase, open Authentication > Users and confirm them.";
+    else err.textContent = `Sign-in failed: ${msg || "unknown error"}`;
+    err.hidden = false;
+  }
 });
 $("#sign-out").addEventListener("click", () => sb.auth.signOut());
 
