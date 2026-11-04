@@ -6,7 +6,8 @@ An internal portal where the SOIL marketing team uploads content (influencer det
 
 | Path | What it is | Where it runs |
 |---|---|---|
-| `index.html` | The portal: sign in, upload, uploads list, search, browse, manage tables | Your team's browser |
+| `index.html` | The portal: sign in, Ask Claude, upload, uploads list, search, browse, manage tables | Your team's browser |
+| `api/ask.js` | The Ask Claude tab: Claude looks up portal data, then answers or creates content | Vercel (server) |
 | `api/process.js` | Registers uploads, asks Claude where new files belong, synthesizes each section | Vercel (server) |
 | `api/approve.js` | Creates a new table once you approve Claude's proposal | Vercel (server) |
 | `api/manage.js` | Reprocess or delete uploads, clear or delete tables | Vercel (server) |
@@ -14,6 +15,7 @@ An internal portal where the SOIL marketing team uploads content (influencer det
 | `api/_lib/types.js` | Custom content types, and the "where does this belong" step | Vercel (server) |
 | `api/_lib/convert-file.js` | Turns PDFs, Word, Excel, text and images into sections Claude can read | Vercel (server) |
 | `api/_lib/save-rows.js` | Checks, matches influencer names, saves rows | Vercel (server) |
+| `api/_lib/ask-tools.js` | The read-only lookups Claude can use in the Ask Claude tab | Vercel (server) |
 | `api/_lib/claude.js`, `api/_lib/supabase.js` | Claude API calls and Supabase access | Vercel (server) |
 | `supabase/schema.sql` | Database setup. Run it once in Supabase; it is not deployed | Supabase |
 | `package.json`, `vercel.json` | Libraries and function settings | Vercel |
