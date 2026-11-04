@@ -24,6 +24,8 @@
     --line: #e4d8c3;
     --red: #a8321f;
     --red-tint: #f8e1dc;
+    --blue: #2f5d8a;
+    --blue-tint: #e3ecf5;
     --radius-s: 6px;
     --radius-m: 10px;
     font-family: "Poppins", "Segoe UI", system-ui, -apple-system, sans-serif;
@@ -34,7 +36,7 @@
   body { margin: 0; font-size: 15px; line-height: 1.55; }
   h1, h2, h3, h4 { margin: 0; line-height: 1.25; }
   h2 { font-size: 1.6rem; font-weight: 600; }
-  h3 { font-size: 1.1rem; font-weight: 600; }
+  h3 { font-size: 1.05rem; font-weight: 600; }
   h4 { font-size: 0.95rem; font-weight: 600; }
   p { margin: 0; }
   [hidden] { display: none !important; }
@@ -43,23 +45,20 @@
 
   /* Buttons and fields */
   button, input, select, textarea { font: inherit; color: inherit; }
-  .btn {
-    border: 1px solid transparent; border-radius: var(--radius-s); padding: 9px 16px;
-    font-weight: 500; cursor: pointer; background: var(--tan-tint); color: var(--ink);
-  }
+  .btn { border: 1px solid transparent; border-radius: var(--radius-s); padding: 9px 16px; font-weight: 500; cursor: pointer; background: var(--tan-tint); color: var(--ink); }
   .btn:hover { background: var(--line); }
   .btn.primary { background: var(--orange-deep); color: #fff; }
   .btn.primary:hover { background: #9c440b; }
   .btn.danger { background: transparent; border-color: var(--red); color: var(--red); }
   .btn.danger:hover { background: var(--red-tint); }
   .btn.quiet { background: transparent; border-color: var(--line); }
+  .btn.quiet:hover { background: var(--tan-tint); }
   .btn.small { padding: 5px 10px; font-size: 0.85rem; }
   .btn:disabled { opacity: 0.55; cursor: not-allowed; }
-  label.field { display: grid; gap: 6px; font-weight: 500; font-size: 0.92rem; }
+  label.field { display: grid; gap: 6px; font-weight: 500; font-size: 0.9rem; }
   .hint { color: var(--muted); font-size: 0.85rem; font-weight: 400; }
-  input[type=text], input[type=email], input[type=password], input[type=search], select, textarea {
-    width: 100%; border: 1px solid var(--line); border-radius: var(--radius-s);
-    padding: 9px 11px; background: #fff;
+  input[type=text], input[type=email], input[type=password], input[type=search], input[type=number], input[type=date], input[type=url], select, textarea {
+    width: 100%; border: 1px solid var(--line); border-radius: var(--radius-s); padding: 9px 11px; background: #fff;
   }
   textarea { resize: vertical; }
 
@@ -68,40 +67,142 @@
   .login-card { width: min(400px, 100%); background: var(--paper); border-radius: var(--radius-m); padding: 32px; display: grid; gap: 18px; border-top: 6px solid var(--green); }
   .login-card .error { color: var(--red); font-size: 0.9rem; }
 
-  /* Layout */
-  .app { display: grid; grid-template-columns: 236px 1fr; min-height: 100vh; }
-  .sidebar { background: var(--cream); padding: 24px 16px; display: flex; flex-direction: column; gap: 28px; border-right: 1px solid var(--line); }
-  /* Official SOIL logo, embedded so the page needs no extra files */
+  /* Logo */
   .logo { display: block; aspect-ratio: 440 / 318; background: url("data:image/png;base64,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") center / contain no-repeat; }
   .brand { display: grid; gap: 10px; padding: 0 8px; }
   .sidebar .logo { width: 140px; }
   .portal-name { font-weight: 600; font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
   .login-brand { display: grid; justify-items: center; gap: 12px; text-align: center; padding-bottom: 4px; }
   .login-brand .logo { width: 170px; }
+
+  /* Layout */
+  .app { display: grid; grid-template-columns: 236px minmax(0, 1fr); min-height: 100vh; }
+  .sidebar { background: var(--cream); padding: 24px 16px; display: flex; flex-direction: column; gap: 22px; border-right: 1px solid var(--line); position: sticky; top: 0; height: 100vh; overflow-y: auto; }
   nav { display: grid; gap: 2px; }
-  nav button {
-    text-align: left; background: none; border: none; padding: 10px 12px; border-radius: var(--radius-s);
-    cursor: pointer; font-weight: 500; border-left: 4px solid transparent;
-  }
+  .nav-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 14px 12px 4px; }
+  nav button { text-align: left; background: none; border: none; padding: 9px 12px; border-radius: var(--radius-s); cursor: pointer; font-weight: 500; border-left: 4px solid transparent; }
   nav button:hover { background: var(--tan-tint); }
   nav button[aria-current="page"] { background: var(--green-tint); border-left-color: var(--green); }
+  nav .library { display: grid; gap: 2px; }
+  nav .library button { font-size: 0.9rem; color: var(--muted); }
   .user { margin-top: auto; padding: 0 8px; display: grid; gap: 8px; font-size: 0.85rem; color: var(--muted); word-break: break-all; }
-  main { padding: 36px 40px 64px; max-width: 1200px; width: 100%; min-width: 0; }
-  .view { display: grid; gap: 24px; }
-  .view-head { display: grid; gap: 6px; }
+  main { padding: 32px 40px 64px; max-width: 1320px; width: 100%; min-width: 0; }
+  .view { display: grid; gap: 22px; }
+  .view-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+  .view-head .titles { display: grid; gap: 6px; }
   .view-head p { color: var(--muted); max-width: 70ch; }
-  .panel { border: 1px solid var(--line); border-radius: var(--radius-m); padding: 24px; background: #fff; display: grid; gap: 18px; }
+  .panel { border: 1px solid var(--line); border-radius: var(--radius-m); padding: 20px; background: #fff; display: grid; gap: 14px; align-content: start; }
+  .panel-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
   .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .toolbar select, .toolbar input { width: auto; min-width: 160px; }
+  .toolbar input[type=checkbox] { min-width: 0; margin: 0; }
+  .toolbar label.row { gap: 6px; }
+  .board { grid-auto-columns: minmax(220px, 1fr); }
+  .empty { color: var(--muted); padding: 20px; text-align: center; border: 1px dashed var(--line); border-radius: var(--radius-m); font-size: 0.9rem; }
+
+  /* KPI cards */
+  .kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  .kpi { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-m); padding: 16px 18px; display: grid; gap: 4px; }
+  .kpi .label { font-size: 0.8rem; color: var(--muted); font-weight: 500; }
+  .kpi .value { font-size: 1.6rem; font-weight: 600; line-height: 1.2; }
+  .kpi .sub { font-size: 0.8rem; color: var(--muted); }
+  .kpi.alert .value { color: var(--red); }
+  .meter { height: 8px; background: var(--tan-tint); border-radius: 99px; overflow: hidden; }
+  .meter span { display: block; height: 100%; background: var(--green); border-radius: 99px; }
+  .meter span.over { background: var(--red); }
+
+  /* Lists */
+  .list { display: grid; }
+  .list-item { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); align-items: center; background: none; border-left: none; border-right: none; border-top: none; text-align: left; cursor: pointer; width: 100%; }
+  .list-item:last-child { border-bottom: none; }
+  .list-item:hover { background: #fcf8f1; }
+  .list-item .main { display: grid; gap: 2px; min-width: 0; }
+  .list-item .main strong { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .list-item .side { text-align: right; font-size: 0.85rem; color: var(--muted); white-space: nowrap; }
+  .late { color: var(--red) !important; font-weight: 600; }
+
+  /* Pills */
+  .pill { display: inline-block; padding: 2px 10px; border-radius: 99px; font-size: 0.76rem; font-weight: 600; white-space: nowrap; background: var(--tan-tint); color: var(--muted); }
+  .pill.done, .pill.st-paid, .pill.st-active { background: var(--green-tint); color: var(--green-deep); }
+  .pill.needs_review, .pill.awaiting_approval, .pill.st-invoiced, .pill.st-prospect { background: var(--orange-tint); color: var(--orange-deep); }
+  .pill.failed, .pill.st-cancelled, .pill.st-ended { background: var(--red-tint); color: var(--red); }
+  .pill.st-posted { background: var(--blue-tint); color: var(--blue); }
+  .pill.rejected { background: #eee; color: #666; }
+  .tag { display: inline-block; font-size: 0.78rem; font-weight: 600; color: var(--green-deep); }
+
+  /* Pipeline bars */
+  .pipeline { display: grid; gap: 8px; }
+  .pipe-row { display: grid; grid-template-columns: 140px 1fr 36px; gap: 10px; align-items: center; font-size: 0.86rem; }
+  .pipe-bar { height: 10px; background: var(--tan-tint); border-radius: 99px; overflow: hidden; }
+  .pipe-bar span { display: block; height: 100%; background: var(--green); }
+
+  /* Content tracker board */
+  .board { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(240px, 1fr); gap: 12px; overflow-x: auto; padding-bottom: 8px; align-items: start; }
+  .col { background: var(--cream); border-radius: var(--radius-m); padding: 10px; display: grid; gap: 8px; align-content: start; min-height: 240px; }
+  .col-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; padding: 2px 4px 6px; font-weight: 600; font-size: 0.9rem; }
+  .col-body { display: grid; gap: 8px; min-height: 160px; align-content: start; border-radius: var(--radius-s); }
+  .col-body.over { background: var(--green-tint); outline: 2px dashed var(--green); }
+  .dcard { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-s); padding: 10px 12px; display: grid; gap: 4px; cursor: pointer; text-align: left; }
+  .dcard:hover { border-color: var(--tan); }
+  .dcard strong { font-weight: 500; font-size: 0.92rem; }
+  .dmeta { display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 0.78rem; color: var(--muted); }
+  .col-empty { color: var(--muted); font-size: 0.82rem; padding: 6px 4px; }
+
+  /* Influencer cards */
+  .icards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+  .icard { background: #fff; border: 1px solid var(--line); border-radius: var(--radius-m); padding: 16px; display: grid; gap: 6px; text-align: left; cursor: pointer; }
+  .icard:hover { border-color: var(--tan); }
+  .icard-top { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
+  .icard-top strong { font-size: 1.02rem; font-weight: 600; }
+  .icard-stats { display: grid; gap: 4px; border-top: 1px solid var(--line); padding-top: 8px; margin-top: 4px; font-size: 0.82rem; color: var(--muted); }
+  .facts { display: grid; grid-template-columns: minmax(110px, 0.35fr) 1fr; gap: 6px 14px; font-size: 0.9rem; margin: 0; }
+  .facts dt { color: var(--muted); }
+  .facts dd { margin: 0; overflow-wrap: anywhere; }
+
+  /* Tables */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-m); background: #fff; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: var(--cream); font-weight: 600; white-space: nowrap; }
+  td.num, th.num { text-align: right; white-space: nowrap; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr.clickable { cursor: pointer; }
+  tbody tr.clickable:hover { background: #fcf8f1; }
+  tfoot td { font-weight: 600; background: var(--cream); }
+  td.cell { max-width: 320px; overflow: hidden; text-overflow: ellipsis; }
+  .details td { background: var(--cream); }
+  .details-box { display: grid; gap: 10px; }
+  .details-box ul { margin: 0; padding-left: 18px; }
+
+  /* Monthly chart */
+  .months { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 8px; align-items: end; height: 180px; padding-top: 10px; }
+  .month { display: grid; gap: 4px; justify-items: center; align-content: end; height: 100%; font-size: 0.72rem; color: var(--muted); }
+  .month .bars { display: flex; gap: 2px; align-items: flex-end; height: 130px; }
+  .month .bars span { width: 12px; border-radius: 3px 3px 0 0; background: var(--tan); min-height: 2px; }
+  .month .bars span.paid { background: var(--green); }
+  .legend { display: flex; gap: 16px; font-size: 0.8rem; color: var(--muted); flex-wrap: wrap; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+
+  /* Calendar */
+  .cal-wrap { overflow-x: auto; }
+  .cal { display: grid; grid-template-columns: repeat(7, minmax(110px, 1fr)); border-top: 1px solid var(--line); border-left: 1px solid var(--line); min-width: 770px; background: #fff; }
+  .cal-dow { padding: 8px; font-size: 0.78rem; font-weight: 600; color: var(--muted); background: var(--cream); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .cal-day { min-height: 112px; padding: 6px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); display: grid; gap: 3px; align-content: start; }
+  .cal-day.other { background: #faf7f2; color: #b3ab98; }
+  .cal-day.today .num { background: var(--orange-deep); color: #fff; border-radius: 99px; padding: 0 7px; }
+  .cal-day .num { font-size: 0.8rem; font-weight: 600; justify-self: start; }
+  .chip { display: block; width: 100%; text-align: left; font-size: 0.74rem; line-height: 1.3; padding: 2px 6px; border-radius: 4px; border: none; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .chip.ev { background: var(--green-tint); color: var(--green-deep); }
+  .chip.ev.deadline { background: var(--orange-tint); color: var(--orange-deep); }
+  .chip.dl { background: var(--blue-tint); color: var(--blue); }
+  .chip.more { background: none; color: var(--muted); }
 
   /* Upload */
-  .drop {
-    border: 2px dashed var(--tan); border-radius: var(--radius-m); padding: 28px; text-align: center;
-    background: var(--cream); cursor: pointer; display: grid; gap: 6px;
-  }
+  .drop { border: 2px dashed var(--tan); border-radius: var(--radius-m); padding: 28px; text-align: center; background: var(--cream); cursor: pointer; display: grid; gap: 6px; }
   .drop.over { border-color: var(--green-deep); background: var(--green-tint); }
-  .drop strong { font-weight: 600; }
-  .progress { display: grid; gap: 10px; }
   .progress ol { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
   .progress li.now { font-weight: 600; }
   .bar { height: 8px; background: var(--tan-tint); border-radius: 99px; overflow: hidden; }
@@ -119,40 +220,18 @@
   .prefixed input { border-radius: 0 var(--radius-s) var(--radius-s) 0; }
   .cols { display: grid; gap: 8px; }
   .col-row { display: grid; grid-template-columns: 1.2fr 0.9fr 2fr auto; gap: 8px; align-items: center; }
-  .col-head { font-size: 0.8rem; color: var(--muted); font-weight: 500; }
+  .col-head-row { font-size: 0.8rem; color: var(--muted); font-weight: 500; }
   .alt { border-top: 1px solid var(--line); padding-top: 16px; }
-
-  /* Tables */
-  .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-m); background: #fff; }
-  table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
-  th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
-  th { background: var(--cream); font-weight: 600; white-space: nowrap; position: sticky; top: 0; }
-  tbody tr:last-child td { border-bottom: none; }
-  tbody tr.clickable { cursor: pointer; }
-  tbody tr.clickable:hover { background: #fcf8f1; }
-  td.cell { max-width: 320px; overflow: hidden; text-overflow: ellipsis; }
-  .details td { background: var(--cream); }
-  .details-box { display: grid; gap: 10px; }
-  .details-box ul { margin: 0; padding-left: 18px; }
-
-  .pill { display: inline-block; padding: 2px 10px; border-radius: 99px; font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
-  .pill.done { background: var(--green-tint); color: var(--green-deep); }
-  .pill.needs_review, .pill.awaiting_approval { background: var(--orange-tint); color: var(--orange-deep); }
-  .pill.failed { background: var(--red-tint); color: var(--red); }
-  .pill.processing, .pill.pending { background: var(--tan-tint); color: var(--muted); }
-  .pill.rejected { background: #eee; color: #666; }
-  .tag { display: inline-block; font-size: 0.78rem; font-weight: 600; color: var(--green-deep); }
 
   /* Search */
   .results { display: grid; gap: 10px; }
   .result-card { border: 1px solid var(--line); border-radius: var(--radius-m); padding: 14px 16px; background: #fff; display: grid; gap: 4px; cursor: pointer; text-align: left; }
   .result-card:hover { border-color: var(--tan); }
   .result-card .meta { display: flex; gap: 12px; color: var(--muted); font-size: 0.8rem; }
-  .empty { color: var(--muted); padding: 24px; text-align: center; border: 1px dashed var(--line); border-radius: var(--radius-m); }
 
   /* Ask Claude */
   .chat { display: grid; gap: 16px; }
-  .msg { display: grid; gap: 8px; max-width: 860px; }
+  .msg { display: grid; gap: 8px; max-width: 880px; }
   .msg.user { justify-self: end; background: var(--tan-tint); padding: 12px 16px; border-radius: var(--radius-m) var(--radius-m) 2px var(--radius-m); white-space: pre-wrap; max-width: 680px; }
   .msg.assistant { background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--green); padding: 16px 20px; border-radius: var(--radius-m); }
   .msg.assistant.error { border-left-color: var(--red); }
@@ -176,29 +255,42 @@
   .composer textarea { min-height: 76px; }
 
   /* Dialogs and toast */
-  dialog { border: none; border-radius: var(--radius-m); padding: 0; width: min(640px, 92vw); box-shadow: 0 12px 40px rgba(42, 40, 32, 0.25); }
+  dialog { border: none; border-radius: var(--radius-m); padding: 0; width: min(640px, 94vw); box-shadow: 0 12px 40px rgba(42, 40, 32, 0.25); }
+  dialog.wide { width: min(860px, 96vw); }
   dialog::backdrop { background: rgba(42, 40, 32, 0.45); }
-  .dialog-body { padding: 24px; display: grid; gap: 16px; max-height: 80vh; overflow: auto; }
+  .dialog-body { padding: 24px; display: grid; gap: 16px; max-height: 86vh; overflow: auto; }
+  .dialog-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; border-top: 1px solid var(--line); padding: 16px 0 24px; margin-bottom: -24px; position: sticky; bottom: -24px; background: #fff; }
+  .dialog-actions .spacer { flex: 1; }
+  .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .form-grid .full { grid-column: 1 / -1; }
+  .handle-row { display: grid; grid-template-columns: 1fr 1.4fr 1fr auto; gap: 8px; align-items: center; }
   .record { display: grid; grid-template-columns: minmax(120px, 0.4fr) 1fr; gap: 6px 16px; font-size: 0.9rem; }
   .record dt { color: var(--muted); font-weight: 500; }
   .record dd { margin: 0; white-space: pre-wrap; word-break: break-word; }
   #toast { position: fixed; bottom: 20px; right: 20px; background: var(--ink); color: #fff; padding: 12px 18px; border-radius: var(--radius-s); max-width: 420px; font-size: 0.9rem; z-index: 50; }
   #toast.error { background: var(--red); }
 
+  @media (max-width: 1000px) {
+    .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: 1fr; }
+  }
   @media (max-width: 820px) {
     .app { grid-template-columns: minmax(0, 1fr); }
-    .sidebar { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px; border-right: none; border-bottom: 1px solid var(--line); }
+    .sidebar { position: static; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px; border-right: none; border-bottom: 1px solid var(--line); }
     nav { display: flex; overflow-x: auto; gap: 4px; width: 100%; order: 3; }
+    nav .nav-label { display: none; }
+    nav .library { display: contents; }
     nav button { white-space: nowrap; border-left: none; border-bottom: 3px solid transparent; }
     nav button[aria-current="page"] { border-bottom-color: var(--green); }
-    .user { margin: 0 0 0 auto; display: flex; align-items: center; }
     .brand { display: flex; align-items: center; gap: 10px; }
     .sidebar .logo { width: 64px; }
+    .user { margin: 0 0 0 auto; display: flex; align-items: center; }
     .user span { display: none; }
-    main { padding: 24px 16px 48px; }
-    .grid-2 { grid-template-columns: 1fr; }
-    .col-row { grid-template-columns: 1fr 1fr; }
+    main { padding: 22px 14px 48px; }
+    .grid-2, .form-grid { grid-template-columns: 1fr; }
+    .col-row, .handle-row { grid-template-columns: 1fr 1fr; }
     .col-row .col-desc { grid-column: 1 / -1; }
+    .pipe-row { grid-template-columns: 110px 1fr 30px; }
   }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
@@ -228,30 +320,141 @@
       <span class="portal-name">Influencer Portal</span>
     </div>
     <nav aria-label="Portal sections">
-      <button data-view="ask" aria-current="page">Ask Claude</button>
+      <button data-view="dashboard" aria-current="page">Dashboard</button>
+      <button data-view="tracker">Content tracker</button>
+      <button data-view="influencers">Influencers</button>
+      <button data-view="budget">Budget</button>
+      <button data-view="calendar">Calendar</button>
+      <button data-view="ask">Ask Claude</button>
       <button data-view="upload">Upload</button>
       <button data-view="uploads">Uploads</button>
-      <button data-view="search">Search</button>
-      <button data-view="browse">Browse data</button>
       <button data-view="manage">Manage tables</button>
+      <div class="nav-label">More</div>
+      <div class="library">
+        <button data-view="search">Search</button>
+        <button data-view="browse">Browse data</button>
+      </div>
     </nav>
     <div class="user"><span id="user-email"></span><button class="btn quiet small" id="sign-out">Sign out</button></div>
   </aside>
 
   <main>
-    <!-- Ask Claude -->
-    <section class="view" id="view-ask">
+    <!-- Dashboard -->
+    <section class="view" id="view-dashboard">
       <div class="view-head">
-        <h2>Ask Claude</h2>
-        <p>Ask a question or ask Claude to create something: scripts, captions, briefs, content calendars and more. Claude looks through all the data in the portal before answering, and only uses facts that are actually in it.</p>
+        <div class="titles"><h2>Dashboard</h2><p id="dash-sub">Your influencer program at a glance.</p></div>
+        <div class="row">
+          <button class="btn primary" type="button" data-action="new-deliverable">Add content</button>
+          <button class="btn quiet" type="button" data-action="new-influencer">Add influencer</button>
+        </div>
+      </div>
+      <div class="kpis" id="dash-kpis"></div>
+      <div class="grid-2">
+        <div class="panel"><div class="panel-head"><h3>Overdue</h3><span class="hint">Due date passed, not posted yet</span></div><div class="list" id="dash-overdue"></div></div>
+        <div class="panel"><div class="panel-head"><h3>Due in the next 7 days</h3></div><div class="list" id="dash-due"></div></div>
+      </div>
+      <div class="grid-3">
+        <div class="panel"><div class="panel-head"><h3>Pipeline</h3></div><div class="pipeline" id="dash-pipeline"></div></div>
+        <div class="panel"><div class="panel-head"><h3>Coming up at SOIL</h3><span class="hint">Next 30 days</span></div><div class="list" id="dash-events"></div></div>
+        <div class="panel"><div class="panel-head"><h3>Recently posted</h3></div><div class="list" id="dash-recent"></div></div>
+      </div>
+    </section>
+
+    <!-- Content tracker -->
+    <section class="view" id="view-tracker" hidden>
+      <div class="view-head">
+        <div class="titles"><h2>Content tracker</h2><p>Every piece of influencer content, from planning to payment. Drag a card to move it to the next stage, or click it to edit.</p></div>
+        <button class="btn primary" type="button" data-action="new-deliverable">Add content</button>
+      </div>
+      <div class="toolbar">
+        <select id="tr-inf" aria-label="Filter by influencer"></select>
+        <select id="tr-camp" aria-label="Filter by campaign"></select>
+        <input type="search" id="tr-text" placeholder="Filter by title or notes" aria-label="Filter by text">
+        <label class="row hint"><input type="checkbox" id="tr-cancelled"> Show cancelled</label>
+      </div>
+      <div class="board" id="board"></div>
+    </section>
+
+    <!-- Influencers -->
+    <section class="view" id="view-influencers" hidden>
+      <div class="view-head">
+        <div class="titles"><h2>Influencers</h2><p>Everyone SOIL works with or is considering. Click a card to see their budget, content and history.</p></div>
+        <button class="btn primary" type="button" data-action="new-influencer">Add influencer</button>
+      </div>
+      <div class="toolbar">
+        <select id="inf-status" aria-label="Filter by status">
+          <option value="">All statuses</option>
+          <option value="active">Active</option>
+          <option value="prospect">Prospect</option>
+          <option value="paused">Paused</option>
+          <option value="ended">Ended</option>
+        </select>
+        <input type="search" id="inf-text" placeholder="Find an influencer" aria-label="Find an influencer">
+      </div>
+      <div class="icards" id="icards"></div>
+    </section>
+
+    <!-- One influencer -->
+    <section class="view" id="view-influencer" hidden>
+      <div><button class="btn quiet small" type="button" id="inf-back">All influencers</button></div>
+      <div id="inf-detail" class="view"></div>
+    </section>
+
+    <!-- Budget -->
+    <section class="view" id="view-budget" hidden>
+      <div class="view-head">
+        <div class="titles"><h2>Budget</h2><p>Allocated budget against what's committed (fees of planned and active content) and what's been paid, for the financial year (April to March).</p></div>
+        <div class="row">
+          <select id="bud-fy" aria-label="Financial year" style="width:auto"></select>
+          <button class="btn primary" type="button" id="bud-add">Add allocation</button>
+        </div>
+      </div>
+      <div class="kpis" id="bud-kpis"></div>
+      <div class="panel">
+        <div class="panel-head"><h3>By influencer</h3></div>
+        <div class="table-wrap" id="bud-table"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h3>By month</h3><div class="legend"><span><i style="background:var(--tan)"></i>Committed</span><span><i style="background:var(--green)"></i>Paid</span></div></div>
+        <div class="months" id="bud-months"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h3>Allocations</h3><span class="hint">From uploaded budget files or added here</span></div>
+        <div class="table-wrap" id="bud-allocs"></div>
+      </div>
+    </section>
+
+    <!-- Calendar -->
+    <section class="view" id="view-calendar" hidden>
+      <div class="view-head">
+        <div class="titles"><h2>Calendar</h2><p>SOIL dates and influencer content in one place.</p></div>
+        <button class="btn primary" type="button" id="cal-add">Add SOIL date</button>
+      </div>
+      <div class="toolbar">
+        <button class="btn quiet small" type="button" id="cal-prev" aria-label="Previous month">Previous</button>
+        <strong id="cal-title" style="min-width: 150px; text-align: center"></strong>
+        <button class="btn quiet small" type="button" id="cal-next" aria-label="Next month">Next</button>
+        <button class="btn quiet small" type="button" id="cal-today">Today</button>
+        <label class="row hint"><input type="checkbox" id="cal-show-ev" checked> SOIL dates</label>
+        <label class="row hint"><input type="checkbox" id="cal-show-dl" checked> Influencer content</label>
+        <label class="row hint"><input type="checkbox" id="cal-show-prev"> Last year's dates</label>
+      </div>
+      <div class="legend"><span><i style="background:var(--orange-tint)"></i>Deadlines</span><span><i style="background:var(--green-tint)"></i>Other SOIL dates</span><span><i style="background:var(--blue-tint)"></i>Influencer content</span></div>
+      <div class="cal-wrap"><div class="cal" id="cal"></div></div>
+    </section>
+
+    <!-- Ask Claude -->
+    <section class="view" id="view-ask" hidden>
+      <div class="view-head">
+        <div class="titles"><h2>Ask Claude</h2><p>Ask a question or ask Claude to create something: scripts, captions, briefs, content calendars and more. Claude looks through all the data in the portal before answering, and only uses facts that are actually in it.</p></div>
       </div>
       <div class="chat" id="chat"></div>
       <div class="starters" id="starters">
-        <button type="button">What application deadlines are coming up in the next 60 days?</button>
-        <button type="button">Write 3 reel scripts for one of our influencers about the next PGPM deadline, in their own style</button>
+        <button type="button">What's overdue in the content tracker, and what's due this week?</button>
+        <button type="button">How much influencer budget is left this financial year, per influencer?</button>
+        <button type="button">Write 3 reel scripts for one of our influencers about the next PGDM deadline, in their own style</button>
         <button type="button">Make a campaign brief for PGDM admissions using our latest placement facts</button>
-        <button type="button">Show each influencer's budget allocation for this year in a table</button>
-        <button type="button">Which alumni stories would make good influencer content this month?</button>
+        <button type="button">Which upcoming SOIL dates have no influencer content planned around them?</button>
       </div>
       <form class="composer" id="ask-form">
         <textarea id="ask-input" placeholder="Ask anything, or describe what you want Claude to create. Press Enter to send, Shift+Enter for a new line."></textarea>
@@ -266,24 +469,19 @@
     <!-- Upload -->
     <section class="view" id="view-upload" hidden>
       <div class="view-head">
-        <h2>Upload content</h2>
-        <p>Add a file and Claude will pull out the important information and save it in the right table. If it doesn’t fit any table yet, Claude will suggest a new one for you to approve.</p>
+        <div class="titles"><h2>Upload content</h2><p>Add a file and Claude will pull out the important information and save it in the right place. If it doesn’t fit anywhere yet, Claude will suggest a new table for you to approve.</p></div>
       </div>
-
       <form class="panel" id="upload-form">
         <label class="field">What are you uploading?
           <select id="up-type" required></select>
           <span class="hint" id="up-type-desc"></span>
         </label>
-
         <label class="field" id="up-influencer-field" hidden>Which influencer is this about? <span class="hint">Optional. Leave it on "Several or not sure" if the file covers more than one person.</span>
           <select id="up-influencer"></select>
         </label>
-
         <label class="field" id="up-replaces-field" hidden>Is this a newer version of an earlier upload? <span class="hint">Optional. The earlier file’s data is removed once this one is saved, so nothing is duplicated.</span>
           <select id="up-replaces"></select>
         </label>
-
         <div>
           <input type="file" id="up-file" hidden accept=".pdf,.docx,.xlsx,.xls,.csv,.tsv,.ods,.txt,.md,.srt,.vtt,.json,.png,.jpg,.jpeg,.webp,.gif">
           <div class="drop" id="drop" tabindex="0" role="button" aria-describedby="drop-hint">
@@ -291,31 +489,26 @@
             <span class="hint" id="drop-hint">PDF, Word (.docx), Excel, CSV, text, transcript (.srt, .vtt) or image. Up to 50 MB.</span>
           </div>
         </div>
-
-        <label class="field">Anything Claude should know about this file? <span class="hint">Optional. For example "figures are for the 2024-26 batch".</span>
+        <label class="field">Anything Claude should know about this file? <span class="hint">Optional. For example "this is the PGDM 2027-29 brochure; placement figures are for the 2024-26 batch".</span>
           <textarea id="up-notes" rows="2"></textarea>
         </label>
-
         <div class="row"><button class="btn primary" type="submit" id="up-submit">Upload and process</button></div>
       </form>
-
       <div class="panel progress" id="progress" hidden>
         <h3 id="progress-title">Working on it</h3>
         <div class="bar"><span id="progress-bar"></span></div>
         <ol id="progress-steps"></ol>
         <div id="progress-result"></div>
       </div>
-
       <div id="approval-slot"></div>
     </section>
 
     <!-- Uploads -->
     <section class="view" id="view-uploads" hidden>
       <div class="view-head">
-        <h2>Uploads</h2>
-        <p>Every file uploaded to the portal, newest first. Open a row to see warnings, errors and Claude’s reasoning.</p>
+        <div class="titles"><h2>Uploads</h2><p>Every file uploaded to the portal, newest first. Open a row to see warnings, errors and Claude’s reasoning.</p></div>
+        <button class="btn quiet small" id="uploads-refresh" type="button">Refresh</button>
       </div>
-      <div class="row"><button class="btn quiet small" id="uploads-refresh">Refresh</button></div>
       <div class="table-wrap">
         <table>
           <thead><tr><th>File</th><th>Type</th><th>Status</th><th>Rows</th><th>Uploaded</th></tr></thead>
@@ -327,11 +520,10 @@
     <!-- Search -->
     <section class="view" id="view-search" hidden>
       <div class="view-head">
-        <h2>Search</h2>
-        <p>Search everything the portal knows: brochures, calendars, influencer content, alumni news, social posts and any tables you’ve added.</p>
+        <div class="titles"><h2>Search</h2><p>Search everything in the portal: brochures, calendars, influencers, content, alumni news, social posts and any tables you’ve added. Normal sentences and partial words work.</p></div>
       </div>
       <form class="row" id="search-form">
-        <input type="search" id="search-q" placeholder="For example: PGPM placements, application deadline, alumni startup" style="flex: 1; min-width: 240px">
+        <input type="search" id="search-q" placeholder="For example: PGDM placements, application deadline, alumni startup" style="flex: 1; min-width: 240px">
         <button class="btn primary" type="submit">Search</button>
       </form>
       <div class="results" id="search-results"></div>
@@ -340,10 +532,9 @@
     <!-- Browse -->
     <section class="view" id="view-browse" hidden>
       <div class="view-head">
-        <h2>Browse data</h2>
-        <p>See what has been saved in each table. Click a row to see the full record.</p>
+        <div class="titles"><h2>Browse data</h2><p>See what has been saved from uploaded files. Click a row to see the full record.</p></div>
       </div>
-      <div class="row">
+      <div class="toolbar">
         <select id="browse-table" style="max-width: 360px"></select>
         <input type="search" id="browse-filter" placeholder="Filter these rows" style="max-width: 280px">
         <span class="hint" id="browse-count"></span>
@@ -354,8 +545,7 @@
     <!-- Manage -->
     <section class="view" id="view-manage" hidden>
       <div class="view-head">
-        <h2>Manage tables</h2>
-        <p>Clearing a table removes all its data and the uploads that fed it. Deleting a table removes it from Supabase completely. Both are permanent. The eight core tables can be cleared but not deleted, because the portal is built around them.</p>
+        <div class="titles"><h2>Manage tables</h2><p>Clearing a table removes all its data and the uploads that fed it. Deleting a table removes it from Supabase completely. Both are permanent. The core tables can be cleared but not deleted.</p></div>
       </div>
       <div class="table-wrap">
         <table>
@@ -366,6 +556,15 @@
     </section>
   </main>
 </div>
+
+<!-- Form dialog (add and edit) -->
+<dialog id="form-dialog">
+  <form class="dialog-body" id="form-dialog-form" novalidate>
+    <h3 id="form-dialog-title"></h3>
+    <div id="form-dialog-content"></div>
+    <div class="dialog-actions" id="form-dialog-actions"></div>
+  </form>
+</dialog>
 
 <!-- Typed confirmation -->
 <dialog id="confirm-dialog">
@@ -387,7 +586,7 @@
   <div class="dialog-body">
     <div class="row" style="justify-content: space-between">
       <h3 id="record-title">Record</h3>
-      <button class="btn quiet small" id="record-close">Close</button>
+      <button class="btn quiet small" id="record-close" type="button">Close</button>
     </div>
     <dl class="record" id="record-body"></dl>
   </div>
@@ -400,14 +599,30 @@
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
 <script>
 // =====================================================================
-// Fill these two in from Supabase: Project Settings > API.
-// Both are safe to put here; they're designed to be public.
+// Supabase project details (both are safe to be public).
 // Never put the service role key or the Claude API key in this file.
 // =====================================================================
 const CONFIG = {
   SUPABASE_URL: "https://kicflvxuixpfywjmiepl.supabase.co",
   SUPABASE_ANON_KEY: "sb_publishable_f4EzbafMl4bPo5OxC-z_SQ_Cqemafvl",
 };
+
+const PROGRAMS = ["PGPM", "PGPM-HR", "PGDM"];
+const STAGES = [
+  ["planned", "Planned"], ["brief_sent", "Brief sent"], ["script_review", "Script in review"],
+  ["content_review", "Content in review"], ["approved", "Approved to post"], ["posted", "Posted"],
+  ["invoiced", "Invoice received"], ["paid", "Paid"],
+];
+const STAGE_LABEL = Object.fromEntries([...STAGES, ["cancelled", "Cancelled"]]);
+const PRE_POST = new Set(["planned", "brief_sent", "script_review", "content_review", "approved"]);
+const LIVE_DONE = new Set(["posted", "invoiced", "paid"]);
+const PLATFORMS = [["instagram", "Instagram"], ["youtube", "YouTube"], ["linkedin", "LinkedIn"], ["x", "X"], ["facebook", "Facebook"], ["telegram", "Telegram"], ["whatsapp", "WhatsApp"], ["podcast", "Podcast"], ["blog", "Blog"], ["other", "Other"]];
+const PLATFORM_LABEL = Object.fromEntries(PLATFORMS);
+const FORMATS = ["Reel", "Story", "Post", "Carousel", "YouTube video", "Short", "Live", "Podcast episode", "Other"];
+const INF_STATUS = [["active", "Active"], ["prospect", "Prospect"], ["paused", "Paused"], ["ended", "Ended"]];
+const INF_STATUS_LABEL = Object.fromEntries(INF_STATUS);
+const EVENT_CATEGORIES = ["application_deadline", "admission_round", "entrance_exam", "interview", "result", "fee_deadline", "orientation", "term_start", "term_end", "exam", "holiday", "placement", "convocation", "event", "webinar", "other"];
+const DEADLINE_CATS = new Set(["application_deadline", "fee_deadline", "admission_round", "entrance_exam"]);
 
 const BUCKET = "portal-uploads";
 const MAX_FILE_MB = 50;
@@ -419,19 +634,41 @@ const COLUMN_TYPES = [
   ["text", "Short text"], ["long_text", "Paragraph"], ["integer", "Whole number"],
   ["number", "Number or money"], ["date", "Date"], ["boolean", "Yes or no"], ["list", "List"],
 ];
-const HIDDEN_COLUMNS = new Set(["id", "search", "source_upload_id"]);
+const HIDDEN_COLUMNS = new Set(["id", "search", "source_upload_id", "name_key"]);
 
-const configured = !CONFIG.SUPABASE_URL.startsWith("PASTE") && !CONFIG.SUPABASE_ANON_KEY.startsWith("PASTE");
-const sb = configured ? supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY) : null;
-const state = { types: [], typeMap: {}, influencers: [], file: null, browseRows: [], busy: false };
+const sb = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+const state = { types: [], typeMap: {}, influencers: [], file: null, browseRows: [], busy: false, asking: false, view: "dashboard", userEmail: "" };
+const store = { loaded: false, influencers: [], infMap: {}, deliverables: [], budgets: [], events: [] };
 
 // ---------- small helpers ----------
 const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const pad = (n) => String(n).padStart(2, "0");
+const isoDate = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const todayStr = () => isoDate(new Date());
+const addDays = (s, n) => { const d = new Date(`${s}T00:00:00`); d.setDate(d.getDate() + n); return isoDate(d); };
 const fmtDate = (v) => v ? new Date(v).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }) : "";
-const fmtDay = (v) => v ? new Date(`${v}T00:00:00`).toLocaleDateString("en-IN", { dateStyle: "medium" }) : "";
+const fmtDay = (v) => v ? new Date(`${String(v).slice(0, 10)}T00:00:00`).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "";
+const fmtShortDay = (v) => v ? new Date(`${String(v).slice(0, 10)}T00:00:00`).toLocaleDateString("en-IN", { day: "numeric", month: "short" }) : "";
+const fyLabel = (start) => `${start}-${pad((start + 1) % 100)}`;
+const fyOfDate = (s) => { if (!s) return null; const [y, m] = String(s).slice(0, 10).split("-").map(Number); return fyLabel(m >= 4 ? y : y - 1); };
+const currentFY = () => fyOfDate(todayStr());
+const fyOfBudget = (b) => { const m = String(b.financial_year || "").match(/(20\d{2})/); return m ? fyLabel(Number(m[1])) : fyOfDate(b.period_start); };
+const delivDate = (d) => d.post_date || d.due_date || (d.created_at || "").slice(0, 10);
+const one = (x) => (Math.round(x * 10) / 10).toString();
+const inr = (n) => n == null || n === "" ? "" : `₹${Math.round(Number(n)).toLocaleString("en-IN")}`;
+const inrShort = (n) => { n = Number(n) || 0; const a = Math.abs(n); if (a >= 1e7) return `₹${one(n / 1e7)} Cr`; if (a >= 1e5) return `₹${one(n / 1e5)} L`; if (a >= 1e3) return `₹${one(n / 1e3)}K`; return `₹${Math.round(n)}`; };
+const countShort = (n) => { n = Number(n) || 0; return n >= 1e6 ? `${one(n / 1e6)}M` : n >= 1e3 ? `${one(n / 1e3)}K` : String(n); };
+const aliasKey = (s) => String(s || "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "");
 const typeLabel = (key) => key === "auto" ? "Let Claude decide" : (state.typeMap[key]?.label || key || "Not decided yet");
 const pill = (status) => `<span class="pill ${esc(status)}">${esc(STATUS_LABELS[status] || status)}</span>`;
+const stagePill = (s) => `<span class="pill st-${esc(s)}">${esc(STAGE_LABEL[s] || s)}</span>`;
+const infName = (id) => store.infMap[id]?.name || "";
+const maxFollowers = (inf) => Math.max(0, ...((inf?.handles || []).map((h) => Number(h.followers) || 0)));
+const isOverdue = (d) => d.due_date && d.due_date < todayStr() && PRE_POST.has(d.status);
+const options = (list, selected, blank) => (blank != null ? `<option value="">${esc(blank)}</option>` : "") +
+  list.map((o) => { const [v, l] = Array.isArray(o) ? o : [o, o]; return `<option value="${esc(v)}" ${String(v) === String(selected ?? "") ? "selected" : ""}>${esc(l)}</option>`; }).join("");
 
 function toast(message, isError = false) {
   const t = $("#toast");
@@ -439,7 +676,7 @@ function toast(message, isError = false) {
   t.className = isError ? "error" : "";
   t.hidden = false;
   clearTimeout(toast.timer);
-  toast.timer = setTimeout(() => { t.hidden = true; }, isError ? 9000 : 4500);
+  toast.timer = setTimeout(() => { t.hidden = true; }, isError ? 9000 : 4000);
 }
 
 function displayValue(v) {
@@ -459,21 +696,13 @@ async function api(path, body) {
   });
   let json = {};
   try { json = await res.json(); } catch { /* not JSON */ }
-  if (res.status === 504) throw new Error("The server took too long on this section. Open Uploads and click Continue processing to carry on.");
+  if (res.status === 504) throw new Error("The server took too long on this step. Try again, or for uploads open Uploads and click Continue processing.");
   if (!res.ok) throw new Error(json.error || `Request failed (${res.status}).`);
   return json;
 }
 
 // ---------- sign in ----------
 async function boot() {
-  if (!configured) {
-    $("#login-screen").hidden = false;
-    const err = $("#login-error");
-    err.textContent = "The portal isn't set up yet: add the Supabase URL and anon key at the bottom of index.html.";
-    err.hidden = false;
-    $("#login-form button").disabled = true;
-    return;
-  }
   const { data: { session } } = await sb.auth.getSession();
   showScreen(session);
   sb.auth.onAuthStateChange((_event, s) => showScreen(s));
@@ -484,6 +713,7 @@ function showScreen(session) {
   $("#login-screen").hidden = !!session;
   $("#app").hidden = !session;
   if (session) {
+    state.userEmail = session.user.email;
     $("#user-email").textContent = session.user.email;
     if (!started) { started = true; startApp(); }
   } else {
@@ -507,25 +737,41 @@ $("#login-form").addEventListener("submit", async (e) => {
 $("#sign-out").addEventListener("click", () => sb.auth.signOut());
 
 async function startApp() {
-  await Promise.all([loadTypes(), loadInfluencers()]);
+  await Promise.all([loadTypes(), loadStore()]);
   renderTypeSelect();
   renderChat();
-  showView("ask");
+  showView("dashboard");
 }
 
-// ---------- navigation ----------
-document.querySelectorAll("nav button").forEach((b) => b.addEventListener("click", () => showView(b.dataset.view)));
-function showView(name) {
-  document.querySelectorAll("nav button").forEach((b) => { if (b.dataset.view === name) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
-  document.querySelectorAll("main .view").forEach((v) => { v.hidden = v.id !== `view-${name}`; });
-  if (name === "uploads") loadUploads();
-  if (name === "browse") loadBrowseTables();
-  if (name === "manage") loadManage();
-  if (name === "search") $("#search-q").focus();
-  if (name === "ask") $("#ask-input").focus();
+// ---------- data ----------
+async function loadStore() {
+  const [inf, del, bud, ev] = await Promise.all([
+    sb.from("influencers").select("id,name,handles,primary_platform,niche,audience_description,audience_location,languages,content_style,agency,contact_person,contact_email,contact_phone,city,notes,relationship_status").order("name").limit(2000),
+    sb.from("deliverables").select("id,influencer_id,title,campaign,program,platform,format,status,due_date,post_date,fee,currency,post_url,views,likes,comments,shares,brief,script,notes,paid_on,created_by,created_at,updated_at").limit(5000),
+    sb.from("influencer_budgets").select("id,influencer_id,influencer_name_raw,financial_year,period_label,period_start,period_end,amount,deliverables,campaign,notes,source_upload_id").limit(5000),
+    sb.from("calendar_events").select("id,title,category,event_date,end_date,date_is_approximate,time_text,program,academic_year,is_previous_year,description,source_upload_id").limit(5000),
+  ]);
+  const failed = [inf, del, bud, ev].find((r) => r.error);
+  if (failed) {
+    const msg = failed.error.message || "";
+    toast(/relationship_status|deliverables/.test(msg)
+      ? "The tracking upgrade hasn't been run in Supabase yet. Run upgrade-tracking.sql in the SQL Editor, then refresh."
+      : `Could not load data: ${msg}`, true);
+  }
+  store.influencers = inf.data || [];
+  store.infMap = Object.fromEntries(store.influencers.map((i) => [i.id, i]));
+  store.deliverables = del.data || [];
+  store.budgets = bud.data || [];
+  store.events = ev.data || [];
+  state.influencers = store.influencers.map((i) => ({ id: i.id, name: i.name }));
+  store.loaded = true;
 }
 
-// ---------- shared data ----------
+async function refreshAll() {
+  await loadStore();
+  renderCurrent();
+}
+
 async function loadTypes() {
   const { data, error } = await sb.from("content_types").select("key,label,description,is_core,table_name,columns").order("is_core", { ascending: false }).order("label");
   if (error) return toast(`Could not load content types: ${error.message}`, true);
@@ -533,9 +779,766 @@ async function loadTypes() {
   state.typeMap = Object.fromEntries(data.map((t) => [t.key, t]));
 }
 
-async function loadInfluencers() {
-  const { data, error } = await sb.from("influencers").select("id,name").order("name");
-  if (!error) state.influencers = data;
+// ---------- navigation ----------
+$$("nav button").forEach((b) => b.addEventListener("click", () => showView(b.dataset.view)));
+document.addEventListener("click", (e) => {
+  const a = e.target.closest("[data-action]");
+  if (!a) return;
+  if (a.dataset.action === "new-deliverable") openDeliverable(null);
+  if (a.dataset.action === "new-influencer") openInfluencerForm(null);
+});
+
+function showView(name) {
+  state.view = name;
+  const navName = name === "influencer" ? "influencers" : name;
+  $$("nav button").forEach((b) => { if (b.dataset.view === navName) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
+  $$("main > .view").forEach((v) => { v.hidden = v.id !== `view-${name}`; });
+  renderCurrent();
+  window.scrollTo({ top: 0 });
+}
+
+function renderCurrent() {
+  const v = state.view;
+  if (v === "dashboard") renderDashboard();
+  if (v === "tracker") renderBoard();
+  if (v === "influencers") renderInfluencers();
+  if (v === "influencer") renderInfluencerDetail();
+  if (v === "budget") renderBudget();
+  if (v === "calendar") renderCalendar();
+  if (v === "uploads") loadUploads();
+  if (v === "browse") loadBrowseTables();
+  if (v === "manage") loadManage();
+  if (v === "search") $("#search-q").focus();
+  if (v === "ask") $("#ask-input").focus();
+}
+
+// ---------- shared rendering ----------
+function deliverableItem(d) {
+  const inf = infName(d.influencer_id);
+  const date = d.due_date && PRE_POST.has(d.status) ? `Due ${fmtShortDay(d.due_date)}` : (d.post_date ? `Posts ${fmtShortDay(d.post_date)}` : "");
+  return `<button class="list-item" type="button" data-deliverable="${esc(d.id)}">
+    <span class="main"><strong>${esc(d.title)}</strong><span class="hint">${esc(inf || "No influencer")}${d.format ? ` · ${esc(d.format)}` : ""}</span></span>
+    <span class="side">${stagePill(d.status)}<br><span class="${isOverdue(d) ? "late" : ""}">${esc(date)}</span></span>
+  </button>`;
+}
+document.addEventListener("click", (e) => {
+  const d = e.target.closest("[data-deliverable]");
+  if (d) { e.preventDefault(); openDeliverable(d.dataset.deliverable); return; }
+  const i = e.target.closest("[data-influencer]");
+  if (i) { e.preventDefault(); openInfluencer(i.dataset.influencer); }
+});
+
+function budgetSummary(fy) {
+  const rows = new Map();
+  const row = (id, name) => {
+    const key = id || `name:${aliasKey(name) || "none"}`;
+    if (!rows.has(key)) rows.set(key, { id, name: id ? (infName(id) || name) : (name || "Not linked to an influencer"), allocated: 0, committed: 0, paid: 0, items: 0 });
+    return rows.get(key);
+  };
+  for (const b of store.budgets) if (fyOfBudget(b) === fy) row(b.influencer_id, b.influencer_name_raw).allocated += Number(b.amount) || 0;
+  for (const d of store.deliverables) {
+    if (d.status === "cancelled" || fyOfDate(delivDate(d)) !== fy) continue;
+    const r = row(d.influencer_id, d.influencer_id ? null : "Not linked to an influencer");
+    r.committed += Number(d.fee) || 0;
+    if (d.status === "paid") r.paid += Number(d.fee) || 0;
+    r.items++;
+  }
+  const list = [...rows.values()].filter((r) => r.allocated || r.committed).sort((a, b) => b.allocated - a.allocated || b.committed - a.committed);
+  const total = list.reduce((t, r) => ({ allocated: t.allocated + r.allocated, committed: t.committed + r.committed, paid: t.paid + r.paid }), { allocated: 0, committed: 0, paid: 0 });
+  return { list, total };
+}
+
+function meter(used, total) {
+  if (!total) return "";
+  const pct = Math.min(100, Math.round((used / total) * 100));
+  return `<div class="meter" title="${pct}% used"><span class="${used > total ? "over" : ""}" style="width:${pct}%"></span></div>`;
+}
+
+// ---------- dashboard ----------
+function renderDashboard() {
+  if (!store.loaded) return;
+  const t = todayStr(), week = addDays(t, 7), month = t.slice(0, 7), fy = currentFY();
+  const live = store.deliverables.filter((d) => d.status !== "cancelled");
+  const overdue = live.filter(isOverdue).sort((a, b) => a.due_date.localeCompare(b.due_date));
+  const dueSoon = live.filter((d) => d.due_date && d.due_date >= t && d.due_date <= week && PRE_POST.has(d.status)).sort((a, b) => a.due_date.localeCompare(b.due_date));
+  const thisMonth = live.filter((d) => (delivDate(d) || "").startsWith(month));
+  const postedMonth = thisMonth.filter((d) => LIVE_DONE.has(d.status));
+  const active = store.influencers.filter((i) => i.relationship_status === "active").length;
+  const { total } = budgetSummary(fy);
+  const monthName = new Date().toLocaleDateString("en-IN", { month: "long" });
+
+  $("#dash-sub").textContent = `${new Date().toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}. Financial year ${fy}.`;
+  $("#dash-kpis").innerHTML = `
+    <div class="kpi"><span class="label">Active influencers</span><span class="value">${active}</span><span class="sub">${store.influencers.length} in total</span></div>
+    <div class="kpi"><span class="label">Content in ${esc(monthName)}</span><span class="value">${postedMonth.length} <span class="hint">of ${thisMonth.length}</span></span><span class="sub">posted so far</span></div>
+    <div class="kpi ${overdue.length ? "alert" : ""}"><span class="label">Overdue</span><span class="value">${overdue.length}</span><span class="sub">${dueSoon.length} more due this week</span></div>
+    <div class="kpi"><span class="label">Budget used, FY ${esc(fy)}</span><span class="value">${inrShort(total.committed)} <span class="hint">of ${total.allocated ? inrShort(total.allocated) : "no allocation"}</span></span>${meter(total.committed, total.allocated)}<span class="sub">${inrShort(total.paid)} paid</span></div>`;
+
+  $("#dash-overdue").innerHTML = overdue.slice(0, 8).map(deliverableItem).join("") || `<div class="empty">Nothing overdue.</div>`;
+  $("#dash-due").innerHTML = dueSoon.slice(0, 8).map(deliverableItem).join("") || `<div class="empty">Nothing due in the next 7 days.</div>`;
+
+  const maxCount = Math.max(1, ...STAGES.map(([k]) => live.filter((d) => d.status === k).length));
+  $("#dash-pipeline").innerHTML = live.length
+    ? STAGES.map(([k, label]) => { const n = live.filter((d) => d.status === k).length; return `<div class="pipe-row"><span>${esc(label)}</span><span class="pipe-bar"><span style="width:${(n / maxCount) * 100}%"></span></span><strong>${n}</strong></div>`; }).join("")
+    : `<div class="empty">No content yet. <button class="btn quiet small" type="button" data-action="new-deliverable">Add content</button></div>`;
+
+  const events = store.events.filter((e) => !e.is_previous_year && e.event_date >= t && e.event_date <= addDays(t, 30)).sort((a, b) => a.event_date.localeCompare(b.event_date));
+  $("#dash-events").innerHTML = events.slice(0, 8).map((e) => `
+    <button class="list-item" type="button" data-event="${esc(e.id)}">
+      <span class="main"><strong>${esc(e.title)}</strong><span class="hint">${esc((e.category || "").replace(/_/g, " "))}${e.program ? ` · ${esc(e.program)}` : ""}</span></span>
+      <span class="side">${esc(fmtShortDay(e.event_date))}</span>
+    </button>`).join("") || `<div class="empty">No SOIL dates in the next 30 days. Upload the calendar or add dates in Calendar.</div>`;
+
+  const recent = live.filter((d) => LIVE_DONE.has(d.status)).sort((a, b) => (b.post_date || "").localeCompare(a.post_date || "")).slice(0, 8);
+  $("#dash-recent").innerHTML = recent.map((d) => `
+    <button class="list-item" type="button" data-deliverable="${esc(d.id)}">
+      <span class="main"><strong>${esc(d.title)}</strong><span class="hint">${esc(infName(d.influencer_id) || "No influencer")}</span></span>
+      <span class="side">${d.views != null ? `${countShort(d.views)} views<br>` : ""}${esc(fmtShortDay(d.post_date))}</span>
+    </button>`).join("") || `<div class="empty">Nothing posted yet.</div>`;
+}
+document.addEventListener("click", (e) => {
+  const ev = e.target.closest("[data-event]");
+  if (ev) openEvent(ev.dataset.event);
+});
+
+// ---------- content tracker ----------
+["#tr-inf", "#tr-camp", "#tr-cancelled"].forEach((s) => $(s).addEventListener("change", renderBoard));
+$("#tr-text").addEventListener("input", renderBoard);
+
+function renderBoard() {
+  if (!store.loaded) return;
+  const infSel = $("#tr-inf"), campSel = $("#tr-camp");
+  const keepInf = infSel.value, keepCamp = campSel.value;
+  infSel.innerHTML = options(store.influencers.map((i) => [i.id, i.name]), keepInf, "All influencers");
+  const camps = [...new Set(store.deliverables.map((d) => d.campaign).filter(Boolean))].sort();
+  campSel.innerHTML = options(camps, keepCamp, "All campaigns");
+
+  const text = $("#tr-text").value.trim().toLowerCase();
+  const showCancelled = $("#tr-cancelled").checked;
+  const items = store.deliverables.filter((d) =>
+    (!infSel.value || d.influencer_id === infSel.value) &&
+    (!campSel.value || d.campaign === campSel.value) &&
+    (!text || `${d.title} ${d.notes || ""} ${d.campaign || ""} ${infName(d.influencer_id)}`.toLowerCase().includes(text)));
+  const cols = showCancelled ? [...STAGES, ["cancelled", "Cancelled"]] : STAGES;
+
+  $("#board").innerHTML = cols.map(([key, label]) => {
+    const list = items.filter((d) => d.status === key).sort((a, b) => (a.due_date || "9999").localeCompare(b.due_date || "9999"));
+    const fees = list.reduce((s, d) => s + (Number(d.fee) || 0), 0);
+    return `<div class="col">
+      <div class="col-head"><span>${esc(label)}</span><span class="hint">${list.length}${fees ? ` · ${inrShort(fees)}` : ""}</span></div>
+      <div class="col-body" data-status="${key}">${list.map(cardHtml).join("") || `<p class="col-empty">Nothing here</p>`}</div>
+    </div>`;
+  }).join("");
+
+  $$("#board .dcard").forEach((c) => {
+    c.addEventListener("dragstart", (e) => { e.dataTransfer.setData("text/plain", c.dataset.deliverable); e.dataTransfer.effectAllowed = "move"; });
+  });
+  $$("#board .col-body").forEach((col) => {
+    col.addEventListener("dragover", (e) => { e.preventDefault(); col.classList.add("over"); });
+    col.addEventListener("dragleave", () => col.classList.remove("over"));
+    col.addEventListener("drop", (e) => {
+      e.preventDefault();
+      col.classList.remove("over");
+      const id = e.dataTransfer.getData("text/plain");
+      if (id) moveDeliverable(id, col.dataset.status);
+    });
+  });
+}
+
+function cardHtml(d) {
+  const inf = infName(d.influencer_id);
+  return `<div class="dcard" draggable="true" data-deliverable="${esc(d.id)}" tabindex="0">
+    <strong>${esc(d.title)}</strong>
+    <span class="hint">${esc(inf || "No influencer")}</span>
+    <div class="dmeta">
+      ${d.format ? `<span>${esc(d.format)}</span>` : ""}
+      ${d.due_date && PRE_POST.has(d.status) ? `<span class="${isOverdue(d) ? "late" : ""}">Due ${esc(fmtShortDay(d.due_date))}</span>` : ""}
+      ${d.post_date && !PRE_POST.has(d.status) ? `<span>Posted ${esc(fmtShortDay(d.post_date))}</span>` : ""}
+      ${d.fee != null ? `<span>${inrShort(d.fee)}</span>` : ""}
+      ${d.views != null ? `<span>${countShort(d.views)} views</span>` : ""}
+    </div>
+  </div>`;
+}
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && e.target.classList?.contains("dcard")) openDeliverable(e.target.dataset.deliverable);
+});
+
+function stagePatch(d, status) {
+  const patch = { status };
+  if (LIVE_DONE.has(status) && !d.post_date) patch.post_date = todayStr();
+  if (status === "paid" && !d.paid_on) patch.paid_on = todayStr();
+  return patch;
+}
+
+async function moveDeliverable(id, status) {
+  const d = store.deliverables.find((x) => x.id === id);
+  if (!d || d.status === status) return;
+  const patch = stagePatch(d, status);
+  Object.assign(d, patch);
+  renderCurrent();
+  const { error } = await sb.from("deliverables").update(patch).eq("id", id);
+  if (error) { toast(`Couldn't move it: ${error.message}`, true); return refreshAll(); }
+  toast(`Moved to ${STAGE_LABEL[status]}.`);
+}
+
+// ---------- form dialog ----------
+function openForm({ title, html, wide = false, actions }) {
+  const dlg = $("#form-dialog");
+  if (dlg.open) dlg.close();
+  dlg.classList.toggle("wide", wide);
+  $("#form-dialog-title").textContent = title;
+  $("#form-dialog-content").innerHTML = html;
+  const box = $("#form-dialog-actions");
+  box.innerHTML = "";
+  for (const a of actions) {
+    if (a.spacer) { const s = document.createElement("span"); s.className = "spacer"; box.appendChild(s); continue; }
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = `btn ${a.kind || "quiet"}`;
+    b.textContent = a.label;
+    b.addEventListener("click", async () => {
+      if (!a.onClick) return dlg.close();
+      $$("#form-dialog-actions button").forEach((x) => { x.disabled = true; });
+      try { const keepOpen = await a.onClick(); if (!keepOpen) dlg.close(); }
+      catch (err) { toast(err.message, true); }
+      finally { $$("#form-dialog-actions button").forEach((x) => { x.disabled = false; }); }
+    });
+    box.appendChild(b);
+  }
+  dlg.showModal();
+  dlg.querySelector("input, select, textarea")?.focus();
+}
+$("#form-dialog-form").addEventListener("submit", (e) => e.preventDefault());
+const val = (id) => { const el = document.getElementById(id); const v = el ? el.value.trim() : ""; return v === "" ? null : v; };
+const numVal = (id) => { const v = val(id); if (v == null) return null; const n = Number(v.replace(/[,₹\s]/g, "")); if (!Number.isFinite(n)) throw new Error(`"${v}" isn't a valid number.`); return n; };
+
+// ---------- deliverable editor ----------
+function openDeliverable(id, defaults = {}) {
+  const d = id ? store.deliverables.find((x) => x.id === id) : { status: "planned", ...defaults };
+  if (!d) return toast("That content item no longer exists.", true);
+  const camps = [...new Set(store.deliverables.map((x) => x.campaign).filter(Boolean))].sort();
+  openForm({
+    title: id ? "Edit content" : "Add content",
+    wide: true,
+    html: `<div class="form-grid">
+      <label class="field full">Title <input type="text" id="d-title" value="${esc(d.title || "")}" placeholder="For example: PGDM deadline reel"></label>
+      <label class="field">Influencer <select id="d-inf">${options(store.influencers.map((i) => [i.id, i.name]), d.influencer_id, "Not assigned yet")}</select></label>
+      <label class="field">Stage <select id="d-status">${options([...STAGES, ["cancelled", "Cancelled"]], d.status)}</select></label>
+      <label class="field">Campaign <input type="text" id="d-campaign" list="d-camps" value="${esc(d.campaign || "")}" placeholder="For example: Admissions 2027"><datalist id="d-camps">${camps.map((c) => `<option value="${esc(c)}">`).join("")}</datalist></label>
+      <label class="field">Program <select id="d-program">${options(PROGRAMS, d.program, "Not specific")}</select></label>
+      <label class="field">Platform <select id="d-platform">${options(PLATFORMS, d.platform, "Choose")}</select></label>
+      <label class="field">Format <select id="d-format">${options(FORMATS, d.format, "Choose")}</select></label>
+      <label class="field">Due from influencer <input type="date" id="d-due" value="${esc(d.due_date || "")}"></label>
+      <label class="field">Goes live on <input type="date" id="d-post" value="${esc(d.post_date || "")}"></label>
+      <label class="field">Fee (₹) <input type="text" inputmode="numeric" id="d-fee" value="${d.fee ?? ""}" placeholder="For example: 25000"></label>
+      <label class="field">Paid on <input type="date" id="d-paid" value="${esc(d.paid_on || "")}"></label>
+      <label class="field full">Post link <input type="url" id="d-url" value="${esc(d.post_url || "")}" placeholder="https://"></label>
+      <label class="field">Views <input type="text" inputmode="numeric" id="d-views" value="${d.views ?? ""}"></label>
+      <label class="field">Likes <input type="text" inputmode="numeric" id="d-likes" value="${d.likes ?? ""}"></label>
+      <label class="field">Comments <input type="text" inputmode="numeric" id="d-comments" value="${d.comments ?? ""}"></label>
+      <label class="field">Shares <input type="text" inputmode="numeric" id="d-shares" value="${d.shares ?? ""}"></label>
+      <label class="field full">Brief <textarea id="d-brief" rows="4">${esc(d.brief || "")}</textarea></label>
+      <label class="field full">Script <textarea id="d-script" rows="4">${esc(d.script || "")}</textarea></label>
+      <label class="field full">Notes <textarea id="d-notes" rows="2">${esc(d.notes || "")}</textarea></label>
+    </div>
+    <p class="hint">Claude can draft the brief or script using the influencer’s style and SOIL’s data. Save first if you’ve changed anything.</p>`,
+    actions: [
+      { label: "Save", kind: "primary", onClick: () => saveDeliverable(id) },
+      { label: "Cancel" },
+      { spacer: true },
+      { label: "Ask Claude for a brief", onClick: () => { askAbout(d, "brief"); } },
+      { label: "Ask Claude for a script", onClick: () => { askAbout(d, "script"); } },
+      ...(id ? [{ label: "Delete", kind: "danger", onClick: () => deleteDeliverable(d) }] : []),
+    ],
+  });
+}
+
+async function saveDeliverable(id) {
+  const title = val("d-title");
+  if (!title) throw new Error("Give the content a title.");
+  const row = {
+    title,
+    influencer_id: val("d-inf"),
+    status: val("d-status") || "planned",
+    campaign: val("d-campaign"),
+    program: val("d-program"),
+    platform: val("d-platform"),
+    format: val("d-format"),
+    due_date: val("d-due"),
+    post_date: val("d-post"),
+    fee: numVal("d-fee"),
+    paid_on: val("d-paid"),
+    post_url: val("d-url"),
+    views: numVal("d-views"),
+    likes: numVal("d-likes"),
+    comments: numVal("d-comments"),
+    shares: numVal("d-shares"),
+    brief: val("d-brief"),
+    script: val("d-script"),
+    notes: val("d-notes"),
+  };
+  if (LIVE_DONE.has(row.status) && !row.post_date) row.post_date = todayStr();
+  if (row.status === "paid" && !row.paid_on) row.paid_on = todayStr();
+  const q = id ? sb.from("deliverables").update(row).eq("id", id) : sb.from("deliverables").insert({ ...row, created_by: state.userEmail });
+  const { error } = await q;
+  if (error) throw new Error(`Couldn't save: ${error.message}`);
+  toast(id ? "Saved." : "Added to the content tracker.");
+  await refreshAll();
+}
+
+async function deleteDeliverable(d) {
+  $("#form-dialog").close();
+  const ok = await confirmTyped({ title: "Delete this content item?", message: `"${d.title}" will be removed from the tracker. This can't be undone. If it was dropped, you could set its stage to Cancelled instead.`, expected: "delete", action: "Delete" });
+  if (!ok) return;
+  const { error } = await sb.from("deliverables").delete().eq("id", d.id);
+  if (error) return toast(`Couldn't delete: ${error.message}`, true);
+  toast("Deleted.");
+  refreshAll();
+}
+
+function askAbout(d, kind) {
+  const inf = infName(val("d-inf") || d.influencer_id);
+  const details = [
+    `Title: ${val("d-title") || d.title || ""}`,
+    inf && `Influencer: ${inf}`,
+    (val("d-platform") || d.platform) && `Platform: ${PLATFORM_LABEL[val("d-platform") || d.platform] || ""}`,
+    (val("d-format") || d.format) && `Format: ${val("d-format") || d.format}`,
+    (val("d-program") || d.program) && `Program: ${val("d-program") || d.program}`,
+    (val("d-campaign") || d.campaign) && `Campaign: ${val("d-campaign") || d.campaign}`,
+    (val("d-post") || d.post_date) && `Goes live on: ${val("d-post") || d.post_date}`,
+    (val("d-notes") || d.notes) && `Notes: ${val("d-notes") || d.notes}`,
+    kind === "script" && (val("d-brief") || d.brief) && `Brief: ${val("d-brief") || d.brief}`,
+  ].filter(Boolean).join("\n");
+  const prompt = kind === "brief"
+    ? `Write a clear influencer brief for this piece of content. Use the portal's data: the influencer's profile and past content, the relevant program facts, and any SOIL dates it should tie in with. Include key messages, must-say facts, things to avoid, call to action, and the disclosure requirement.\n\n${details}`
+    : `Write the script for this piece of content in the influencer's own style (use their tone, hooks and key phrases from past content). Use only facts from the portal's data. Include a strong hook in the first 3 seconds, the main points, and a call to action.\n\n${details}`;
+  $("#form-dialog").close();
+  showView("ask");
+  sendAsk(prompt);
+  return false;
+}
+
+// ---------- influencers ----------
+["#inf-status"].forEach((s) => $(s).addEventListener("change", renderInfluencers));
+$("#inf-text").addEventListener("input", renderInfluencers);
+$("#inf-back").addEventListener("click", () => showView("influencers"));
+
+function renderInfluencers() {
+  if (!store.loaded) return;
+  const st = $("#inf-status").value, text = $("#inf-text").value.trim().toLowerCase();
+  const fy = currentFY();
+  const { list } = budgetSummary(fy);
+  const byId = Object.fromEntries(list.filter((r) => r.id).map((r) => [r.id, r]));
+  const infs = store.influencers.filter((i) => (!st || i.relationship_status === st) && (!text || `${i.name} ${i.niche || ""} ${i.city || ""}`.toLowerCase().includes(text)));
+  $("#icards").innerHTML = infs.map((i) => {
+    const b = byId[i.id] || { allocated: 0, committed: 0 };
+    const mine = store.deliverables.filter((d) => d.influencer_id === i.id && d.status !== "cancelled");
+    const posted = mine.filter((d) => LIVE_DONE.has(d.status)).length;
+    const fol = maxFollowers(i);
+    return `<button class="icard" type="button" data-influencer="${esc(i.id)}">
+      <span class="icard-top"><strong>${esc(i.name)}</strong><span class="pill st-${esc(i.relationship_status)}">${esc(INF_STATUS_LABEL[i.relationship_status] || "")}</span></span>
+      <span class="hint">${esc(PLATFORM_LABEL[i.primary_platform] || i.primary_platform || "")}${fol ? ` · ${countShort(fol)} followers` : ""}${i.city ? ` · ${esc(i.city)}` : ""}</span>
+      ${i.niche ? `<span>${esc(i.niche)}</span>` : ""}
+      <span class="icard-stats">
+        <span>Budget FY ${esc(fy)}: ${b.allocated ? inrShort(b.allocated) : "not set"}${b.committed ? `, ${inrShort(b.committed)} committed` : ""}</span>
+        ${b.allocated ? meter(b.committed, b.allocated) : ""}
+        <span>${posted} posted · ${mine.length - posted} in progress</span>
+      </span>
+    </button>`;
+  }).join("") || `<div class="empty">${store.influencers.length ? "No influencers match." : "No influencers yet. Add one here, or upload an influencer details file."}</div>`;
+}
+
+function openInfluencer(id) {
+  state.influencerId = id;
+  showView("influencer");
+}
+
+async function renderInfluencerDetail() {
+  const i = store.infMap[state.influencerId];
+  const box = $("#inf-detail");
+  if (!i) { box.innerHTML = `<div class="empty">This influencer no longer exists.</div>`; return; }
+  const fy = currentFY();
+  const { list } = budgetSummary(fy);
+  const b = list.find((r) => r.id === i.id) || { allocated: 0, committed: 0, paid: 0 };
+  const mine = store.deliverables.filter((d) => d.influencer_id === i.id).sort((a, b2) => (b2.due_date || "").localeCompare(a.due_date || ""));
+  const allocs = store.budgets.filter((x) => x.influencer_id === i.id).sort((a, b2) => (fyOfBudget(b2) || "").localeCompare(fyOfBudget(a) || ""));
+  const handles = (i.handles || []).filter((h) => h.handle || h.url);
+
+  box.innerHTML = `
+    <div class="view-head">
+      <div class="titles"><h2>${esc(i.name)} <span class="pill st-${esc(i.relationship_status)}">${esc(INF_STATUS_LABEL[i.relationship_status] || "")}</span></h2>
+        <p>${esc(i.niche || "")}</p></div>
+      <div class="row">
+        <button class="btn primary" type="button" id="det-add">Add content</button>
+        <button class="btn quiet" type="button" id="det-edit">Edit details</button>
+        <button class="btn quiet" type="button" id="det-ask">Ask Claude about ${esc(i.name.split(" ")[0])}</button>
+      </div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><span class="label">Budget FY ${esc(fy)}</span><span class="value">${b.allocated ? inrShort(b.allocated) : "Not set"}</span>${meter(b.committed, b.allocated)}</div>
+      <div class="kpi"><span class="label">Committed</span><span class="value">${inrShort(b.committed)}</span><span class="sub">${b.allocated ? `${inrShort(b.allocated - b.committed)} left` : ""}</span></div>
+      <div class="kpi"><span class="label">Paid</span><span class="value">${inrShort(b.paid)}</span></div>
+      <div class="kpi"><span class="label">Content</span><span class="value">${mine.filter((d) => LIVE_DONE.has(d.status)).length} <span class="hint">posted</span></span><span class="sub">${mine.filter((d) => PRE_POST.has(d.status)).length} in progress</span></div>
+    </div>
+    <div class="grid-2">
+      <div class="panel"><h3>Details</h3>
+        <dl class="facts">
+          ${handles.map((h) => `<dt>${esc(PLATFORM_LABEL[h.platform] || h.platform || "Profile")}</dt><dd>${h.url ? `<a href="${esc(h.url)}" target="_blank" rel="noopener">${esc(h.handle || h.url)}</a>` : esc(h.handle)}${h.followers ? ` · ${countShort(h.followers)} followers` : ""}</dd>`).join("")}
+          ${[["City", i.city], ["Audience", i.audience_description], ["Audience location", i.audience_location], ["Languages", (i.languages || []).join(", ")], ["Content style", i.content_style], ["Agency", i.agency], ["Contact person", i.contact_person], ["Email", i.contact_email], ["Phone", i.contact_phone], ["Notes", i.notes]]
+            .filter(([, v]) => v).map(([k, v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("") || `<dd class="hint">No details yet.</dd>`}
+        </dl>
+      </div>
+      <div class="panel"><div class="panel-head"><h3>Budget allocations</h3><button class="btn quiet small" type="button" id="det-alloc">Add allocation</button></div>
+        ${allocs.length ? `<div class="list">${allocs.map((a) => `<button class="list-item" type="button" data-alloc="${esc(a.id)}"><span class="main"><strong>${esc(a.period_label || "Allocation")}</strong><span class="hint">FY ${esc(fyOfBudget(a) || "not set")}${a.deliverables ? ` · ${esc(a.deliverables)}` : ""}</span></span><span class="side">${inr(a.amount)}</span></button>`).join("")}</div>` : `<div class="empty">No budget allocated yet.</div>`}
+      </div>
+    </div>
+    <div class="panel"><div class="panel-head"><h3>Content</h3></div>
+      ${mine.length ? `<div class="table-wrap"><table><thead><tr><th>Title</th><th>Stage</th><th>Due</th><th>Goes live</th><th class="num">Fee</th><th class="num">Views</th></tr></thead><tbody>
+        ${mine.map((d) => `<tr class="clickable" data-deliverable="${esc(d.id)}"><td>${esc(d.title)}</td><td>${stagePill(d.status)}</td><td class="${isOverdue(d) ? "late" : ""}">${esc(fmtDay(d.due_date))}</td><td>${esc(fmtDay(d.post_date))}</td><td class="num">${inr(d.fee)}</td><td class="num">${d.views != null ? countShort(d.views) : ""}</td></tr>`).join("")}
+      </tbody></table></div>` : `<div class="empty">No content tracked for ${esc(i.name)} yet.</div>`}
+    </div>
+    <div class="panel"><div class="panel-head"><h3>Past content they’ve made</h3><span class="hint">From uploaded transcripts</span></div><div id="det-past"><p class="hint">Loading</p></div></div>`;
+
+  $("#det-add").addEventListener("click", () => openDeliverable(null, { influencer_id: i.id }));
+  $("#det-edit").addEventListener("click", () => openInfluencerForm(i.id));
+  $("#det-alloc").addEventListener("click", () => openAllocation(null, { influencer_id: i.id }));
+  $("#det-ask").addEventListener("click", () => {
+    showView("ask");
+    $("#ask-input").value = `About ${i.name}: `;
+    $("#ask-input").focus();
+  });
+  $$("#inf-detail [data-alloc]").forEach((x) => x.addEventListener("click", () => openAllocation(x.dataset.alloc)));
+
+  const { data: past } = await sb.from("influencer_content").select("id,platform,content_format,published_date,title,summary,tone").eq("influencer_id", i.id).order("published_date", { ascending: false, nullsFirst: false }).limit(30);
+  const pastBox = $("#det-past");
+  if (!pastBox) return;
+  pastBox.innerHTML = past?.length
+    ? `<div class="list">${past.map((p) => `<button class="list-item" type="button" data-record="influencer_content:${esc(p.id)}"><span class="main"><strong>${esc(p.title || p.summary || "Untitled")}</strong><span class="hint">${esc([PLATFORM_LABEL[p.platform] || p.platform, p.content_format, p.tone].filter(Boolean).join(" · "))}</span></span><span class="side">${esc(fmtShortDay(p.published_date))}</span></button>`).join("")}</div>`
+    : `<div class="empty">No transcripts uploaded for ${esc(i.name)} yet. Upload them on the Upload screen to help Claude write in their style.</div>`;
+}
+document.addEventListener("click", (e) => {
+  const r = e.target.closest("[data-record]");
+  if (!r) return;
+  const [table, id] = r.dataset.record.split(":");
+  openRecord(table, id);
+});
+
+function handleRowHtml(h = {}) {
+  return `<div class="handle-row">
+    <select class="h-platform" aria-label="Platform">${options(PLATFORMS, h.platform || "instagram")}</select>
+    <input type="text" class="h-handle" aria-label="Handle or profile link" placeholder="@handle or link" value="${esc(h.handle || h.url || "")}">
+    <input type="text" class="h-followers" inputmode="numeric" aria-label="Followers" placeholder="Followers" value="${h.followers ?? ""}">
+    <button class="btn quiet small h-remove" type="button" aria-label="Remove">Remove</button>
+  </div>`;
+}
+
+function openInfluencerForm(id) {
+  const i = id ? store.infMap[id] : { relationship_status: "active", handles: [] };
+  openForm({
+    title: id ? `Edit ${i.name}` : "Add influencer",
+    wide: true,
+    html: `<div class="form-grid">
+      <label class="field">Name <input type="text" id="i-name" value="${esc(i.name || "")}"></label>
+      <label class="field">Status <select id="i-status">${options(INF_STATUS, i.relationship_status)}</select></label>
+      <label class="field">Main platform <select id="i-platform">${options(PLATFORMS, i.primary_platform, "Choose")}</select></label>
+      <label class="field">City <input type="text" id="i-city" value="${esc(i.city || "")}"></label>
+      <label class="field full">What they create content about <input type="text" id="i-niche" value="${esc(i.niche || "")}" placeholder="For example: MBA admissions and CAT prep"></label>
+      <div class="field full">Social accounts
+        <div id="i-handles" style="display:grid; gap:8px">${(i.handles?.length ? i.handles : [{}]).map(handleRowHtml).join("")}</div>
+        <div><button class="btn quiet small" type="button" id="i-add-handle">Add another account</button></div>
+      </div>
+      <label class="field full">Audience <input type="text" id="i-audience" value="${esc(i.audience_description || "")}" placeholder="Who watches them"></label>
+      <label class="field">Audience location <input type="text" id="i-aud-loc" value="${esc(i.audience_location || "")}"></label>
+      <label class="field">Languages <input type="text" id="i-langs" value="${esc((i.languages || []).join(", "))}" placeholder="Hindi, English"></label>
+      <label class="field full">Content style <input type="text" id="i-style" value="${esc(i.content_style || "")}"></label>
+      <label class="field">Agency <input type="text" id="i-agency" value="${esc(i.agency || "")}"></label>
+      <label class="field">Contact person <input type="text" id="i-contact" value="${esc(i.contact_person || "")}"></label>
+      <label class="field">Email <input type="text" id="i-email" value="${esc(i.contact_email || "")}"></label>
+      <label class="field">Phone <input type="text" id="i-phone" value="${esc(i.contact_phone || "")}"></label>
+      <label class="field full">Notes <textarea id="i-notes" rows="3">${esc(i.notes || "")}</textarea></label>
+    </div>`,
+    actions: [
+      { label: "Save", kind: "primary", onClick: () => saveInfluencer(id) },
+      { label: "Cancel" },
+      { spacer: true },
+      ...(id ? [{ label: "Delete", kind: "danger", onClick: () => deleteInfluencer(i) }] : []),
+    ],
+  });
+  const wire = () => $$("#i-handles .h-remove").forEach((b) => { b.onclick = () => b.closest(".handle-row").remove(); });
+  wire();
+  $("#i-add-handle").addEventListener("click", () => { $("#i-handles").insertAdjacentHTML("beforeend", handleRowHtml()); wire(); });
+}
+
+async function saveInfluencer(id) {
+  const name = val("i-name");
+  if (!name) throw new Error("Give the influencer a name.");
+  const handles = $$("#i-handles .handle-row").map((r) => {
+    const raw = r.querySelector(".h-handle").value.trim();
+    const fol = r.querySelector(".h-followers").value.replace(/[,\s]/g, "").trim();
+    if (!raw) return null;
+    const isUrl = /^https?:\/\//i.test(raw);
+    const followers = fol === "" ? null : Number(fol);
+    if (followers != null && !Number.isFinite(followers)) throw new Error(`"${fol}" isn't a valid follower count.`);
+    return { platform: r.querySelector(".h-platform").value, handle: isUrl ? null : raw, url: isUrl ? raw : null, followers };
+  }).filter(Boolean);
+  const row = {
+    name,
+    relationship_status: val("i-status") || "active",
+    primary_platform: val("i-platform"),
+    city: val("i-city"),
+    niche: val("i-niche"),
+    handles,
+    audience_description: val("i-audience"),
+    audience_location: val("i-aud-loc"),
+    languages: (val("i-langs") || "").split(",").map((s) => s.trim()).filter(Boolean),
+    content_style: val("i-style"),
+    agency: val("i-agency"),
+    contact_person: val("i-contact"),
+    contact_email: val("i-email"),
+    contact_phone: val("i-phone"),
+    notes: val("i-notes"),
+  };
+  const res = id
+    ? await sb.from("influencers").update(row).eq("id", id).select("id").single()
+    : await sb.from("influencers").insert(row).select("id").single();
+  if (res.error) {
+    if (/name_key|duplicate/i.test(res.error.message)) throw new Error("There's already an influencer with this name.");
+    throw new Error(`Couldn't save: ${res.error.message}`);
+  }
+  const aliases = [name, ...handles.map((h) => h.handle).filter(Boolean)]
+    .map((a) => ({ alias_key: aliasKey(a), alias: a, influencer_id: res.data.id }))
+    .filter((a, idx, arr) => a.alias_key && arr.findIndex((x) => x.alias_key === a.alias_key) === idx);
+  if (aliases.length) await sb.from("influencer_aliases").upsert(aliases, { onConflict: "alias_key", ignoreDuplicates: true });
+  toast(id ? "Saved." : `${name} added.`);
+  await loadStore();
+  if (!id) { openInfluencer(res.data.id); return; }
+  renderCurrent();
+}
+
+async function deleteInfluencer(i) {
+  $("#form-dialog").close();
+  const ok = await confirmTyped({ title: `Delete ${i.name}?`, message: "Their profile is removed. Their content items and budget rows stay, but won't be linked to anyone. If you've just stopped working with them, set their status to Ended instead.", expected: i.name, action: "Delete influencer" });
+  if (!ok) return;
+  const { error } = await sb.from("influencers").delete().eq("id", i.id);
+  if (error) return toast(`Couldn't delete: ${error.message}`, true);
+  toast(`${i.name} deleted.`);
+  await loadStore();
+  showView("influencers");
+}
+
+// ---------- budget ----------
+$("#bud-fy").addEventListener("change", renderBudget);
+$("#bud-add").addEventListener("click", () => openAllocation(null, { financial_year: $("#bud-fy").value }));
+
+function fyOptions() {
+  const cur = Number(currentFY().slice(0, 4));
+  const set = new Set([fyLabel(cur - 1), fyLabel(cur), fyLabel(cur + 1)]);
+  store.budgets.forEach((b) => { const f = fyOfBudget(b); if (f) set.add(f); });
+  store.deliverables.forEach((d) => { const f = fyOfDate(delivDate(d)); if (f) set.add(f); });
+  return [...set].sort().reverse();
+}
+
+function renderBudget() {
+  if (!store.loaded) return;
+  const sel = $("#bud-fy");
+  const keep = sel.value || currentFY();
+  sel.innerHTML = options(fyOptions().map((f) => [f, `FY ${f}`]), keep);
+  const fy = sel.value;
+  const { list, total } = budgetSummary(fy);
+  const left = total.allocated - total.committed;
+
+  $("#bud-kpis").innerHTML = `
+    <div class="kpi"><span class="label">Allocated</span><span class="value">${inrShort(total.allocated)}</span><span class="sub">${inr(total.allocated)}</span></div>
+    <div class="kpi"><span class="label">Committed</span><span class="value">${inrShort(total.committed)}</span>${meter(total.committed, total.allocated)}</div>
+    <div class="kpi"><span class="label">Paid</span><span class="value">${inrShort(total.paid)}</span><span class="sub">${inrShort(total.committed - total.paid)} still to pay</span></div>
+    <div class="kpi ${left < 0 ? "alert" : ""}"><span class="label">${left < 0 ? "Over budget" : "Left to commit"}</span><span class="value">${inrShort(Math.abs(left))}</span></div>`;
+
+  $("#bud-table").innerHTML = list.length ? `<table>
+    <thead><tr><th>Influencer</th><th class="num">Allocated</th><th class="num">Committed</th><th class="num">Paid</th><th class="num">Left</th><th style="min-width:140px">Used</th></tr></thead>
+    <tbody>${list.map((r) => `<tr class="${r.id ? "clickable" : ""}" ${r.id ? `data-influencer="${esc(r.id)}"` : ""}>
+      <td>${esc(r.name)}</td><td class="num">${inr(r.allocated)}</td><td class="num">${inr(r.committed)}</td><td class="num">${inr(r.paid)}</td>
+      <td class="num ${r.allocated - r.committed < 0 ? "late" : ""}">${r.allocated ? inr(r.allocated - r.committed) : ""}</td>
+      <td>${r.allocated ? meter(r.committed, r.allocated) : `<span class="hint">No allocation</span>`}</td></tr>`).join("")}</tbody>
+    <tfoot><tr><td>Total</td><td class="num">${inr(total.allocated)}</td><td class="num">${inr(total.committed)}</td><td class="num">${inr(total.paid)}</td><td class="num">${inr(left)}</td><td></td></tr></tfoot>
+  </table>` : `<div class="empty">Nothing for FY ${esc(fy)} yet. Add an allocation, upload a budget file, or add content with a fee.</div>`;
+
+  const start = Number(fy.slice(0, 4));
+  const months = Array.from({ length: 12 }, (_, k) => { const m = ((3 + k) % 12) + 1; const y = m >= 4 ? start : start + 1; return `${y}-${pad(m)}`; });
+  const sums = months.map((m) => {
+    const ds = store.deliverables.filter((d) => d.status !== "cancelled" && (delivDate(d) || "").startsWith(m));
+    return { m, committed: ds.reduce((s, d) => s + (Number(d.fee) || 0), 0), paid: ds.filter((d) => d.status === "paid").reduce((s, d) => s + (Number(d.fee) || 0), 0) };
+  });
+  const peak = Math.max(1, ...sums.map((s) => s.committed));
+  $("#bud-months").innerHTML = sums.map((s) => `<div class="month" title="${esc(s.m)}: ${inr(s.committed)} committed, ${inr(s.paid)} paid">
+    <span>${s.committed ? inrShort(s.committed) : ""}</span>
+    <div class="bars"><span style="height:${(s.committed / peak) * 100}%"></span><span class="paid" style="height:${(s.paid / peak) * 100}%"></span></div>
+    <span>${new Date(`${s.m}-01T00:00:00`).toLocaleDateString("en-IN", { month: "short" })}</span></div>`).join("");
+
+  const allocs = store.budgets.filter((b) => fyOfBudget(b) === fy);
+  $("#bud-allocs").innerHTML = allocs.length ? `<table>
+    <thead><tr><th>Influencer</th><th>Period</th><th>Deliverables</th><th class="num">Amount</th><th>Source</th></tr></thead>
+    <tbody>${allocs.map((a) => `<tr class="clickable" data-alloc="${esc(a.id)}"><td>${esc(infName(a.influencer_id) || a.influencer_name_raw)}</td><td>${esc(a.period_label || "")}</td><td>${esc(a.deliverables || "")}</td><td class="num">${inr(a.amount)}</td><td class="hint">${a.source_upload_id ? "Uploaded file" : "Added here"}</td></tr>`).join("")}</tbody>
+  </table>` : `<div class="empty">No allocations for FY ${esc(fy)}.</div>`;
+  $$("#bud-allocs [data-alloc]").forEach((x) => x.addEventListener("click", () => openAllocation(x.dataset.alloc)));
+}
+
+function openAllocation(id, defaults = {}) {
+  const a = id ? store.budgets.find((x) => x.id === id) : { financial_year: currentFY(), ...defaults };
+  if (!a) return;
+  const fy = id ? (fyOfBudget(a) || currentFY()) : (a.financial_year || currentFY());
+  openForm({
+    title: id ? "Edit allocation" : "Add budget allocation",
+    html: `<div class="form-grid">
+      <label class="field full">Influencer <select id="a-inf">${options(store.influencers.map((i) => [i.id, i.name]), a.influencer_id, "Choose an influencer")}</select></label>
+      <label class="field">Financial year <select id="a-fy">${options(fyOptions().map((f) => [f, `FY ${f}`]), fy)}</select></label>
+      <label class="field">Amount (₹) <input type="text" inputmode="numeric" id="a-amount" value="${a.amount ?? ""}"></label>
+      <label class="field">Period <input type="text" id="a-period" value="${esc(a.period_label || "")}" placeholder="Annual, Q1, January..."></label>
+      <label class="field">Campaign <input type="text" id="a-campaign" value="${esc(a.campaign || "")}"></label>
+      <label class="field full">Deliverables agreed <input type="text" id="a-deliv" value="${esc(a.deliverables || "")}" placeholder="For example: 4 reels and 2 stories"></label>
+      <label class="field full">Notes <textarea id="a-notes" rows="2">${esc(a.notes || "")}</textarea></label>
+    </div>
+    ${a.source_upload_id ? `<p class="hint">This allocation came from an uploaded budget file. You can edit it here; to remove it, delete that upload.</p>` : ""}`,
+    actions: [
+      { label: "Save", kind: "primary", onClick: () => saveAllocation(id) },
+      { label: "Cancel" },
+      { spacer: true },
+      ...(id && !a.source_upload_id ? [{ label: "Delete", kind: "danger", onClick: () => deleteAllocation(a) }] : []),
+    ],
+  });
+}
+
+async function saveAllocation(id) {
+  const infId = val("a-inf");
+  if (!infId) throw new Error("Choose an influencer.");
+  const amount = numVal("a-amount");
+  if (amount == null) throw new Error("Enter an amount.");
+  const row = {
+    influencer_id: infId,
+    influencer_name_raw: infName(infId),
+    financial_year: val("a-fy"),
+    amount,
+    amount_text: inr(amount),
+    period_label: val("a-period"),
+    campaign: val("a-campaign"),
+    deliverables: val("a-deliv"),
+    notes: val("a-notes"),
+  };
+  const { error } = id ? await sb.from("influencer_budgets").update(row).eq("id", id) : await sb.from("influencer_budgets").insert(row);
+  if (error) throw new Error(`Couldn't save: ${error.message}`);
+  toast("Allocation saved.");
+  await refreshAll();
+}
+
+async function deleteAllocation(a) {
+  const { error } = await sb.from("influencer_budgets").delete().eq("id", a.id);
+  if (error) throw new Error(`Couldn't delete: ${error.message}`);
+  toast("Allocation deleted.");
+  await refreshAll();
+}
+
+// ---------- calendar ----------
+state.calMonth = todayStr().slice(0, 7);
+$("#cal-prev").addEventListener("click", () => shiftMonth(-1));
+$("#cal-next").addEventListener("click", () => shiftMonth(1));
+$("#cal-today").addEventListener("click", () => { state.calMonth = todayStr().slice(0, 7); renderCalendar(); });
+["#cal-show-ev", "#cal-show-dl", "#cal-show-prev"].forEach((s) => $(s).addEventListener("change", renderCalendar));
+$("#cal-add").addEventListener("click", () => openEventForm(null));
+
+function shiftMonth(n) {
+  const [y, m] = state.calMonth.split("-").map(Number);
+  const d = new Date(y, m - 1 + n, 1);
+  state.calMonth = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
+  renderCalendar();
+}
+
+function renderCalendar() {
+  if (!store.loaded) return;
+  const [y, m] = state.calMonth.split("-").map(Number);
+  const first = new Date(y, m - 1, 1);
+  $("#cal-title").textContent = first.toLocaleDateString("en-IN", { month: "long", year: "numeric" });
+  const startOffset = (first.getDay() + 6) % 7; // Monday first
+  const gridStart = new Date(y, m - 1, 1 - startOffset);
+  const showEv = $("#cal-show-ev").checked, showDl = $("#cal-show-dl").checked, showPrev = $("#cal-show-prev").checked;
+  const t = todayStr();
+  const cells = [];
+  const daysInMonth = new Date(y, m, 0).getDate();
+  const totalCells = Math.ceil((startOffset + daysInMonth) / 7) * 7;
+  for (let k = 0; k < totalCells; k++) {
+    const d = new Date(gridStart); d.setDate(gridStart.getDate() + k);
+    const ds = isoDate(d);
+    const chips = [];
+    if (showEv) {
+      store.events.filter((e) => (showPrev || !e.is_previous_year) && e.event_date <= ds && (e.end_date || e.event_date) >= ds)
+        .forEach((e) => chips.push(`<button class="chip ev ${DEADLINE_CATS.has(e.category) ? "deadline" : ""}" type="button" data-event="${esc(e.id)}" title="${esc(e.title)}">${e.is_previous_year ? "Last year: " : ""}${esc(e.title)}</button>`));
+    }
+    if (showDl) {
+      store.deliverables.filter((d2) => d2.status !== "cancelled" && (d2.post_date || d2.due_date) === ds)
+        .forEach((d2) => chips.push(`<button class="chip dl" type="button" data-deliverable="${esc(d2.id)}" title="${esc(d2.title)}">${esc(infName(d2.influencer_id) ? `${infName(d2.influencer_id)}: ` : "")}${esc(d2.title)}</button>`));
+    }
+    const shown = chips.slice(0, 4).join("") + (chips.length > 4 ? `<button class="chip more" type="button" data-day="${ds}">+${chips.length - 4} more</button>` : "");
+    cells.push(`<div class="cal-day ${d.getMonth() !== m - 1 ? "other" : ""} ${ds === t ? "today" : ""}"><span class="num">${d.getDate()}</span>${shown}</div>`);
+  }
+  $("#cal").innerHTML = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((x) => `<div class="cal-dow">${x}</div>`).join("") + cells.join("");
+  $$("#cal [data-day]").forEach((b) => b.addEventListener("click", () => showDay(b.dataset.day)));
+}
+
+function showDay(ds) {
+  const evs = store.events.filter((e) => e.event_date <= ds && (e.end_date || e.event_date) >= ds);
+  const dls = store.deliverables.filter((d) => d.status !== "cancelled" && (d.post_date || d.due_date) === ds);
+  openForm({
+    title: fmtDay(ds),
+    html: `<div class="list">${evs.map((e) => `<button class="list-item" type="button" data-event="${esc(e.id)}"><span class="main"><strong>${esc(e.title)}</strong><span class="hint">${esc((e.category || "").replace(/_/g, " "))}</span></span></button>`).join("")}${dls.map(deliverableItem).join("")}</div>`,
+    actions: [{ label: "Close" }],
+  });
+}
+
+function openEvent(id) {
+  const e = store.events.find((x) => x.id === id);
+  if (!e) return;
+  if ($("#form-dialog").open) $("#form-dialog").close();
+  openEventForm(e.id);
+}
+
+function openEventForm(id) {
+  const e = id ? store.events.find((x) => x.id === id) : { category: "event", event_date: todayStr() };
+  openForm({
+    title: id ? "SOIL date" : "Add SOIL date",
+    html: `<div class="form-grid">
+      <label class="field full">Title <input type="text" id="e-title" value="${esc(e.title || "")}" placeholder="For example: PGDM Round 2 application deadline"></label>
+      <label class="field">Type <select id="e-cat">${options(EVENT_CATEGORIES.map((c) => [c, c.replace(/_/g, " ")]), e.category)}</select></label>
+      <label class="field">Program <select id="e-program">${options(PROGRAMS, e.program, "All programs")}</select></label>
+      <label class="field">Date <input type="date" id="e-date" value="${esc(e.event_date || "")}"></label>
+      <label class="field">End date <input type="date" id="e-end" value="${esc(e.end_date || "")}"></label>
+      <label class="field full">Details <textarea id="e-desc" rows="3">${esc(e.description || "")}</textarea></label>
+    </div>
+    ${e.source_upload_id ? `<p class="hint">This date came from an uploaded calendar${e.is_previous_year ? " (last year's)" : ""}. You can edit it here; to remove it, delete that upload.</p>` : ""}`,
+    actions: [
+      { label: "Save", kind: "primary", onClick: () => saveEvent(id) },
+      { label: "Cancel" },
+      { spacer: true },
+      { label: "Plan content for this date", onClick: () => { const d = val("e-date"); $("#form-dialog").close(); setTimeout(() => openDeliverable(null, { post_date: d, notes: `For: ${val("e-title") || ""}` }), 0); return true; } },
+      ...(id && !e.source_upload_id ? [{ label: "Delete", kind: "danger", onClick: () => deleteEvent(e) }] : []),
+    ],
+  });
+}
+
+async function saveEvent(id) {
+  const title = val("e-title"), date = val("e-date");
+  if (!title || !date) throw new Error("Enter a title and a date.");
+  const end = val("e-end");
+  if (end && end < date) throw new Error("The end date is before the start date.");
+  const row = { title, category: val("e-cat") || "event", program: val("e-program"), event_date: date, end_date: end, description: val("e-desc") };
+  const { error } = id ? await sb.from("calendar_events").update(row).eq("id", id) : await sb.from("calendar_events").insert({ ...row, is_previous_year: false, academic_year: null });
+  if (error) throw new Error(`Couldn't save: ${error.message}`);
+  toast("Saved.");
+  await refreshAll();
+}
+
+async function deleteEvent(e) {
+  const { error } = await sb.from("calendar_events").delete().eq("id", e.id);
+  if (error) throw new Error(`Couldn't delete: ${error.message}`);
+  toast("Deleted.");
+  await refreshAll();
 }
 
 // ---------- upload form ----------
@@ -556,14 +1559,12 @@ async function onTypeChange() {
   $("#up-type-desc").textContent = key === "auto"
     ? "Claude will match it to an existing type, or suggest a new table for you to approve."
     : (state.typeMap[key]?.description || "");
-
   const isTranscript = key === "influencer_transcript";
   $("#up-influencer-field").hidden = !isTranscript;
   if (isTranscript) {
     $("#up-influencer").innerHTML = `<option value="">Several or not sure</option>` +
       state.influencers.map((i) => `<option value="${esc(i.id)}">${esc(i.name)}</option>`).join("");
   }
-
   $("#up-replaces-field").hidden = true;
   if (key !== "auto") {
     const { data } = await sb.from("uploads").select("id,file_name,uploaded_at")
@@ -669,7 +1670,7 @@ function setBar(pct) { $("#progress-bar").style.width = `${Math.max(0, Math.min(
 
 async function runSections(uploadId) {
   $("#progress").hidden = false;
-  step("Claude is synthesizing the content");
+  step("Claude is reading the content");
   setBar(35);
   let r;
   do {
@@ -681,7 +1682,7 @@ async function runSections(uploadId) {
   } while (!r.done);
   setBar(100);
   showResult(r);
-  loadInfluencers();
+  await loadStore();
   return r;
 }
 
@@ -694,9 +1695,7 @@ function showResult(r) {
   }
   const warnings = r.warnings || [];
   const cls = warnings.length ? "result review" : "result";
-  const title = warnings.length
-    ? `Saved ${r.rowsCreated ?? 0} rows. A few things need checking:`
-    : `Done. Saved ${r.rowsCreated ?? 0} rows.`;
+  const title = warnings.length ? `Saved ${r.rowsCreated ?? 0} rows. A few things need checking:` : `Done. Saved ${r.rowsCreated ?? 0} rows.`;
   box.innerHTML = `<div class="${cls}"><strong>${esc(title)}</strong>${warnings.length ? `<ul>${warnings.map((w) => `<li>${esc(w)}</li>`).join("")}</ul>` : ""}</div>`;
 }
 
@@ -705,30 +1704,24 @@ function renderApproval(uploadId, proposal, reason) {
   const p = proposal || { columns: [] };
   const tableSuffix = String(p.table_name || "").replace(/^custom_/, "");
   const existingOptions = state.types.map((t) => `<option value="${esc(t.key)}">${esc(t.label)}</option>`).join("");
-
   $("#approval-slot").innerHTML = `
     <div class="panel approval" id="approval">
-      <div class="view-head">
+      <div class="titles" style="display:grid; gap:8px">
         <h3>Claude suggests a new table</h3>
         ${reason ? `<p class="reason">${esc(reason)}</p>` : ""}
         <p class="hint">Check the name and columns. You can rename, add or remove columns before creating it. Future uploads of this kind will go into the same table automatically.</p>
       </div>
       <div class="grid-2">
         <label class="field">Name people will see <input type="text" id="ap-label" value="${esc(p.label || "")}"></label>
-        <label class="field">Table name in Supabase
-          <div class="prefixed"><span>custom_</span><input type="text" id="ap-table" value="${esc(tableSuffix)}"></div>
-        </label>
+        <label class="field">Table name in Supabase <div class="prefixed"><span>custom_</span><input type="text" id="ap-table" value="${esc(tableSuffix)}"></div></label>
       </div>
       <label class="field">What this content is <span class="hint">Claude uses this to recognise future uploads of the same kind.</span>
         <textarea id="ap-desc" rows="2">${esc(p.description || "")}</textarea>
       </label>
-      <details>
-        <summary>Extraction instructions Claude will follow</summary>
-        <textarea id="ap-instr" rows="7" style="margin-top: 10px">${esc(p.instructions || "")}</textarea>
-      </details>
+      <details><summary>Extraction instructions Claude will follow</summary><textarea id="ap-instr" rows="7" style="margin-top: 10px">${esc(p.instructions || "")}</textarea></details>
       <div class="cols">
         <h4>Columns</h4>
-        <div class="col-row col-head"><span>Column name</span><span>Type</span><span class="col-desc">What goes in it</span><span></span></div>
+        <div class="col-row col-head-row"><span>Column name</span><span>Type</span><span class="col-desc">What goes in it</span><span></span></div>
         <div id="ap-cols"></div>
         <div><button class="btn quiet small" type="button" id="ap-add">Add a column</button></div>
       </div>
@@ -746,15 +1739,12 @@ function renderApproval(uploadId, proposal, reason) {
         <button class="btn quiet" type="button" id="ap-use-existing">Use this type</button>
       </div>
     </div>`;
-
   (p.columns || []).forEach((c) => addColumnRow(c));
   if (!(p.columns || []).length) addColumnRow({ type: "text" });
   refreshTitleSelects(p.title_column, p.snippet_column);
-
   $("#ap-add").addEventListener("click", () => { addColumnRow({ type: "text" }); refreshTitleSelects(); });
   $("#ap-cols").addEventListener("input", () => refreshTitleSelects());
   $("#ap-cols").addEventListener("change", () => refreshTitleSelects());
-
   $("#ap-approve").addEventListener("click", () => decideApproval(uploadId, "approve"));
   $("#ap-reject").addEventListener("click", () => decideApproval(uploadId, "reject"));
   $("#ap-use-existing").addEventListener("click", () => decideApproval(uploadId, "use_existing"));
@@ -774,7 +1764,7 @@ function addColumnRow(c) {
 }
 
 function readColumns() {
-  return [...document.querySelectorAll("#ap-cols .col-row")].map((r) => ({
+  return $$("#ap-cols .col-row").map((r) => ({
     name: r.querySelector(".c-name").value.trim().toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, ""),
     type: r.querySelector(".c-type").value,
     description: r.querySelector(".c-desc").value.trim(),
@@ -792,7 +1782,7 @@ function refreshTitleSelects(titleWanted, snippetWanted) {
 }
 
 async function decideApproval(uploadId, decision) {
-  const buttons = document.querySelectorAll("#approval button");
+  const buttons = $$("#approval button");
   buttons.forEach((b) => { b.disabled = true; });
   try {
     if (decision === "approve") {
@@ -855,12 +1845,12 @@ function toggleUploadDetails(tr, u) {
   const next = tr.nextElementSibling;
   if (next?.classList.contains("details")) { next.remove(); return; }
   const warnings = Array.isArray(u.warnings) ? u.warnings : [];
-  const typeOptions = state.types.map((t) => `<option value="${esc(t.key)}" ${t.key === u.content_type ? "selected" : ""}>${esc(t.label)}</option>`).join("");
+  const typeOptions = `<option value="">Choose the type first</option>` + state.types.map((t) => `<option value="${esc(t.key)}" ${t.key === u.content_type ? "selected" : ""}>${esc(t.label)}</option>`).join("");
   const actions = [];
   if (u.status === "awaiting_approval") actions.push(`<button class="btn primary small" data-act="review">Review proposed table</button>`);
   if (u.status === "processing") actions.push(`<button class="btn primary small" data-act="continue">Continue processing</button>`);
   if (["done", "needs_review", "failed", "rejected"].includes(u.status)) {
-    actions.push(`<select class="reprocess-type" style="max-width: 240px" aria-label="Process as">${typeOptions}</select><button class="btn quiet small" data-act="reprocess">Reprocess</button>`);
+    actions.push(`<select class="reprocess-type" style="max-width: 260px" aria-label="Process as">${typeOptions}</select><button class="btn quiet small" data-act="reprocess">Reprocess</button>`);
   }
   actions.push(`<button class="btn danger small" data-act="delete">Delete upload</button>`);
 
@@ -888,21 +1878,18 @@ function toggleUploadDetails(tr, u) {
       } else if (act === "continue" || act === "reprocess") {
         if (act === "reprocess") {
           const ct = row.querySelector(".reprocess-type").value;
+          if (!ct) return toast("Choose what type of file this is before reprocessing.", true);
           await api("/api/manage", { action: "reprocess", uploadId: u.id, contentType: ct });
         }
         showView("upload");
         startProgress(`Processing ${u.file_name}`);
         await runSections(u.id);
       } else if (act === "delete") {
-        const ok = await confirmTyped({
-          title: "Delete this upload?",
-          message: `This removes ${u.file_name} and the ${u.rows_created || 0} rows it created. Influencer profiles it added are kept.`,
-          expected: "delete",
-          action: "Delete upload",
-        });
+        const ok = await confirmTyped({ title: "Delete this upload?", message: `This removes ${u.file_name} and the ${u.rows_created || 0} rows it created. Influencer profiles it added are kept.`, expected: "delete", action: "Delete upload" });
         if (!ok) return;
         await api("/api/manage", { action: "delete_upload", uploadId: u.id });
         toast("Upload deleted.");
+        await loadStore();
         loadUploads();
       }
     } catch (err) {
@@ -922,17 +1909,20 @@ $("#search-form").addEventListener("submit", async (e) => {
   const { data, error } = await sb.rpc("search_portal", { q, max_results: 50 });
   if (error) { box.innerHTML = ""; return toast(`Search failed: ${error.message}`, true); }
   if (!data.length) {
-    box.innerHTML = `<div class="empty">Nothing matched "${esc(q)}". Try fewer or different words.</div>`;
+    box.innerHTML = `<div class="empty">Nothing matched "${esc(q)}". Try different words, or ask Claude instead.</div>`;
     return;
   }
   box.innerHTML = data.map((r, i) => `
-    <button class="result-card" data-i="${i}">
+    <button class="result-card" type="button" data-i="${i}">
       <span class="meta"><span class="tag">${esc(r.result_type)}</span>${r.result_date ? `<span>${esc(fmtDay(r.result_date))}</span>` : ""}</span>
       <strong>${esc(r.result_title || "Untitled")}</strong>
       ${r.snippet ? `<span>${esc(r.snippet)}</span>` : ""}
     </button>`).join("");
   box.querySelectorAll(".result-card").forEach((b) => b.addEventListener("click", () => {
     const r = data[Number(b.dataset.i)];
+    if (r.result_table === "deliverables") return openDeliverable(r.result_id);
+    if (r.result_table === "influencers") return openInfluencer(r.result_id);
+    if (r.result_table === "calendar_events") return openEventForm(r.result_id);
     openRecord(r.result_table, r.result_id, r.result_title);
   }));
 });
@@ -940,7 +1930,7 @@ $("#search-form").addEventListener("submit", async (e) => {
 async function openRecord(table, id, title) {
   const { data, error } = await sb.from(table).select("*").eq("id", id).maybeSingle();
   if (error || !data) return toast("Could not open that record.", true);
-  showRecord(title || table, data);
+  showRecord(title || table.replace(/_/g, " "), data);
 }
 
 function showRecord(title, row) {
@@ -984,7 +1974,7 @@ function renderBrowseRows() {
     wrap.innerHTML = `<div class="empty">${state.browseRows.length ? "No rows match that filter." : "This table is empty. Upload a file of this type to fill it."}</div>`;
     return;
   }
-  const cols = Object.keys(rows[0]).filter((k) => !HIDDEN_COLUMNS.has(k) && k !== "created_at");
+  const cols = Object.keys(rows[0]).filter((k) => !HIDDEN_COLUMNS.has(k) && k !== "created_at" && k !== "updated_at");
   wrap.innerHTML = `<table><thead><tr>${cols.map((c) => `<th>${esc(c.replace(/_/g, " "))}</th>`).join("")}</tr></thead>
     <tbody>${rows.map((r, i) => `<tr class="clickable" data-i="${i}">${cols.map((c) => `<td class="cell" title="${esc(displayValue(r[c]))}">${esc(displayValue(r[c]).slice(0, 140))}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
   wrap.querySelectorAll("tr.clickable").forEach((tr) => tr.addEventListener("click", () => showRecord($("#browse-table").selectedOptions[0].textContent, rows[Number(tr.dataset.i)])));
@@ -1015,7 +2005,7 @@ async function manageTable(act, table, rows) {
     title: deleting ? `Delete the table ${table}?` : `Clear all data in ${table}?`,
     message: deleting
       ? `This permanently deletes the table, its ${rows} rows, and every upload of this type, including the original files. This can't be undone.`
-      : `This permanently removes all ${rows} rows and every upload that fed this table, including the original files. The table itself stays, ready for new uploads.`,
+      : `This permanently removes all ${rows} rows and every upload that fed this table, including the original files. The table itself stays.`,
     expected: table,
     action: deleting ? "Delete table" : "Clear data",
   });
@@ -1025,6 +2015,7 @@ async function manageTable(act, table, rows) {
     toast(deleting ? `Deleted ${table}.` : `Cleared ${table}.`);
     await loadTypes();
     renderTypeSelect();
+    await loadStore();
     loadManage();
   } catch (err) {
     toast(err.message, true);
@@ -1034,18 +2025,11 @@ async function manageTable(act, table, rows) {
 // ---------- Ask Claude ----------
 const CHAT_KEY = "soil-portal-chat";
 let chat = loadChat();
-
-function loadChat() {
-  try { return JSON.parse(localStorage.getItem(CHAT_KEY)) || []; } catch { return []; }
-}
-function saveChat() {
-  try { localStorage.setItem(CHAT_KEY, JSON.stringify(chat.slice(-40))); } catch { /* storage full or blocked */ }
-}
+function loadChat() { try { return JSON.parse(localStorage.getItem(CHAT_KEY)) || []; } catch { return []; } }
+function saveChat() { try { localStorage.setItem(CHAT_KEY, JSON.stringify(chat.slice(-40))); } catch { /* storage full or blocked */ } }
 
 function renderMarkdown(text) {
-  if (window.marked && window.DOMPurify) {
-    return DOMPurify.sanitize(marked.parse(text, { breaks: true }));
-  }
+  if (window.marked && window.DOMPurify) return DOMPurify.sanitize(marked.parse(text, { breaks: true }));
   return esc(text).replace(/\n/g, "<br>");
 }
 
@@ -1057,21 +2041,16 @@ function renderChat(pending = false) {
     const foot = [];
     if (m.lookedAt?.length) foot.push(`<span>Looked at: ${esc(m.lookedAt.join(" · "))}</span>`);
     if (!m.error) foot.push(`<button class="btn quiet small" data-copy="${i}" type="button">Copy</button>`);
-    return `<div class="msg assistant${m.error ? " error" : ""}">
-      <div class="msg-body">${renderMarkdown(m.content)}</div>
-      ${foot.length ? `<div class="msg-foot">${foot.join("")}</div>` : ""}
-    </div>`;
+    return `<div class="msg assistant${m.error ? " error" : ""}"><div class="msg-body">${renderMarkdown(m.content)}</div>${foot.length ? `<div class="msg-foot">${foot.join("")}</div>` : ""}</div>`;
   }).join("") + (pending ? `<div class="msg assistant"><span class="thinking">Claude is looking through the portal data</span></div>` : "");
   box.querySelectorAll("[data-copy]").forEach((b) => b.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(chat[Number(b.dataset.copy)].content);
-      toast("Copied.");
-    } catch { toast("Couldn't copy. Select the text and copy it instead.", true); }
+    try { await navigator.clipboard.writeText(chat[Number(b.dataset.copy)].content); toast("Copied."); }
+    catch { toast("Couldn't copy. Select the text and copy it instead.", true); }
   }));
 }
 
 async function sendAsk(text) {
-  const content = text.trim();
+  const content = String(text || "").trim();
   if (!content || state.asking) return;
   state.asking = true;
   $("#ask-send").disabled = true;
@@ -1099,20 +2078,9 @@ async function sendAsk(text) {
 }
 
 $("#ask-form").addEventListener("submit", (e) => { e.preventDefault(); sendAsk($("#ask-input").value); });
-$("#ask-input").addEventListener("keydown", (e) => {
-  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendAsk($("#ask-input").value); }
-});
-$("#starters").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => {
-  $("#ask-input").value = b.textContent;
-  $("#ask-input").focus();
-}));
-$("#ask-new").addEventListener("click", () => {
-  if (state.asking) return;
-  chat = [];
-  saveChat();
-  renderChat();
-  $("#ask-input").focus();
-});
+$("#ask-input").addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendAsk($("#ask-input").value); } });
+$("#starters").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { $("#ask-input").value = b.textContent; $("#ask-input").focus(); }));
+$("#ask-new").addEventListener("click", () => { if (state.asking) return; chat = []; saveChat(); renderChat(); $("#ask-input").focus(); });
 
 // ---------- typed confirmation ----------
 function confirmTyped({ title, message, expected, action }) {
